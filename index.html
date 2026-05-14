@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex Nacional Completa - 1010 Pokémon ⭐</title>
+    <style>
+        :root {
+            --pokedex-red: #c94040;
+            --pokedex-dark: #8b2020;
+            --screen-bg: #e8f5e9;
+            --screen-border: #1b5e20;
+            --golden: #c9a84c;
+            --text-dark: #1a3a1a;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            background: linear-gradient(180deg, #1a3a2a 0%, #0d1f14 50%, #1a3a2a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: radial-gradient(ellipse at 20% 50%, rgba(45, 139, 78, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(45, 139, 78, 0.1) 0%, transparent 50%);
+        }
+        .pokedex-outer {
+            position: relative;
+            width: 100%;
+            max-width: 850px;
+            background: linear-gradient(180deg, #d44545 0%, #a03030 30%, #8b2020 60%, #a03030 100%);
+            border-radius: 30px;
+            padding: 15px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 0 2px 10px rgba(255, 150, 150, 0.3),
+                0 0 0 6px #6b1515, 0 0 0 12px #3d0c0c, 0 0 0 18px #1a0505;
+            border: 3px solid #5c1010;
+        }
+        .pokedex-inner {
+            background: linear-gradient(180deg, #d44545 0%, #b83232 50%, #d44545 100%);
+            border-radius: 22px;
+            padding: 20px;
+            border: 2px solid #7a1818;
+            box-shadow: inset 0 3px 15px rgba(0, 0, 0, 0.4);
+        }
+        .pokedex-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 0 5px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .dex-indicator {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .dex-light {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 3px solid #3d0c0c;
+            animation: glowLight 2s infinite;
+        }
+        .dex-light.blue {
+            background: #4080ff;
+            box-shadow: 0 0 15px #4080ff;
+            animation-delay: 0s;
+        }
+        .dex-light.yellow {
+            background: #ffd740;
+            box-shadow: 0 0 15px #ffd740;
+            animation-delay: 0.5s;
+        }
+        .dex-light.green {
+            background: #40d940;
+            box-shadow: 0 0 15px #40d940;
+            animation-delay: 1s;
+        }
+        @keyframes glowLight {
+            0%,
+            100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+        .dex-title-area {
+            text-align: center;
+        }
+        .dex-title {
+            font-family: 'Georgia', serif;
+            font-size: 1.6em;
+            font-weight: 900;
+            color: #ffe8c0;
+            text-shadow: 2px 2px 0 #3d0c0c;
+            letter-spacing: 3px;
+        }
+        .dex-subtitle {
+            font-size: 0.7em;
+            color: #f0c080;
+            letter-spacing: 2px;
+        }
+        .screen-container {
+            background: #1a3a2a;
+            border-radius: 18px;
+            padding: 12px;
+            border: 4px solid #2d5a3d;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        .screen-inner {
+            background: var(--screen-bg);
+            border-radius: 10px;
+            padding: 18px;
+            border: 3px solid #1b5e20;
+            position: relative;
+            overflow-y: auto;
+            max-height: 500px;
+            scroll-behavior: smooth;
+            box-shadow: inset 0 0 30px rgba(0, 60, 0, 0.2);
+        }
+        .screen-inner::-webkit-scrollbar {
+            width: 8px;
+        }
+        .screen-inner::-webkit-scrollbar-track {
+            background: #c8e6c9;
+            border-radius: 10px;
+        }
+        .screen-inner::-webkit-scrollbar-thumb {
+            background: #4caf50;
+            border-radius: 10px;
+        }
+        .screen-inner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px,
+                    rgba(0, 0, 0, 0.03) 4px);
+            pointer-events: none;
+            z-index: 10;
+            border-radius: 10px;
+        }
+        .pokemon-display-area {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 5;
+        }
+        .pokemon-sprite-container {
+            flex: 0 0 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #c8e6c9 0%, #a5d6a7 50%, #c8e6c9 100%);
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            border: 2px solid #4caf50;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            min-height: 200px;
+            position: relative;
+        }
+        .pokemon-sprite-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: #ffd740;
+        }
+        .pokemon-sprite-container:active {
+            transform: scale(0.95);
+        }
+        .pokemon-sprite-container img {
+            width: 170px;
+            height: 170px;
+            object-fit: contain;
+            filter: drop-shadow(3px 5px 5px rgba(0, 0, 0, 0.3));
+            transition: all 0.3s ease;
+            image-rendering: auto;
+        }
+        .pokemon-sprite-container:active img {
+            transform: scale(1.1);
+        }
+        .tap-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 64, 0.6), transparent);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .pokemon-sprite-container.tapped .tap-glow {
+            animation: tapPulse 0.6s ease-out;
+        }
+        @keyframes tapPulse {
+            0% {
+                opacity: 1;
+                width: 40px;
+                height: 40px;
+            }
+            100% {
+                opacity: 0;
+                width: 150px;
+                height: 150px;
+            }
+        }
+        .pokemon-info-panel {
+            flex: 1;
+            min-width: 220px;
+            position: relative;
+            z-index: 5;
+        }
+        .pokemon-name-display {
+            font-family: 'Georgia', serif;
+            font-size: 2em;
+            font-weight: 900;
+            color: #1b5e20;
+            text-transform: capitalize;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .pokemon-id-display {
+            font-size: 1em;
+            color: #5a8a5a;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .type-badges {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .type-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        .type-normal {
+            background: #A8A878;
+        }
+        .type-fire {
+            background: #F08030;
+        }
+        .type-water {
+            background: #6890F0;
+        }
+        .type-electric {
+            background: #F8D030;
+            color: #333;
+        }
+        .type-grass {
+            background: #78C850;
+        }
+        .type-ice {
+            background: #98D8D8;
+            color: #333;
+        }
+        .type-fighting {
+            background: #C03028;
+        }
+        .type-poison {
+            background: #A040A0;
+        }
+        .type-ground {
+            background: #E0C068;
+            color: #333;
+        }
+        .type-flying {
+            background: #A890F0;
+        }
+        .type-psychic {
+            background: #F85888;
+        }
+        .type-bug {
+            background: #A8B820;
+        }
+        .type-rock {
+            background: #B8A038;
+        }
+        .type-ghost {
+            background: #705898;
+        }
+        .type-dragon {
+            background: #7038F8;
+        }
+        .type-dark {
+            background: #705848;
+        }
+        .type-steel {
+            background: #B8B8D0;
+            color: #333;
+        }
+        .type-fairy {
+            background: #EE99AC;
+            color: #333;
+        }
+        .stats-mini {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 10px;
+            font-size: 0.85em;
+            color: #2d5a3d;
+        }
+        .stat-item {
+            background: rgba(76, 175, 80, 0.15);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        .effectiveness-box {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid #a5d6a7;
+            transition: all 0.3s;
+        }
+        .eff-title {
+            font-weight: 900;
+            color: #1b5e20;
+            font-size: 0.9em;
+            margin-bottom: 6px;
+        }
+        .eff-row {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+            align-items: center;
+        }
+        .eff-label {
+            font-weight: bold;
+            font-size: 0.75em;
+            min-width: 55px;
+            color: #3d6b3d;
+        }
+        .mini-type-tag {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+        }
+        .evolution-bar {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            position: relative;
+            z-index: 5;
+        }
+        .evo-item {
+            padding: 8px 14px;
+            background: linear-gradient(180deg, #e8d5b8, #d4bfa0);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85em;
+            border: 2px solid #8b6914;
+            transition: all 0.3s;
+            color: #3d2a1a;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        .evo-item:hover {
+            background: linear-gradient(180deg, #f5e6d0, #e8d5b8);
+            transform: translateY(-3px);
+            border-color: #c9a84c;
+        }
+        .evo-item.active {
+            background: linear-gradient(180deg, #ffd740, #e0b830) !important;
+            border-color: #8b6914 !important;
+            font-weight: 900;
+            animation: evoGlow 1.5s infinite;
+        }
+        @keyframes evoGlow {
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(255, 215, 64, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(255, 215, 64, 0.8);
+            }
+        }
+        .evo-arrow {
+            color: #c9a84c;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .controls-area {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+        .select-wrapper {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffe8c0;
+            pointer-events: none;
+        }
+        #pokemonSelect {
+            width: 100%;
+            padding: 12px 35px 12px 18px;
+            border-radius: 25px;
+            border: 3px solid #5c1010;
+            font-size: 0.9em;
+            background: linear-gradient(180deg, #f5e6d0, #e8d5b8);
+            cursor: pointer;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #3d1a1a;
+            appearance: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+        #pokemonSelect:hover {
+            border-color: #ffd740;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        .dex-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .dex-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 3px solid #3d0c0c;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.7em;
+            transition: all 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dex-btn.red {
+            background: linear-gradient(180deg, #ff6060, #c03030);
+        }
+        .dex-btn.blue {
+            background: linear-gradient(180deg, #6090ff, #3050c0);
+        }
+        .dex-btn.green {
+            background: linear-gradient(180deg, #60d060, #2d8b2d);
+        }
+        .dex-btn:active {
+            transform: scale(0.9);
+        }
+        .dex-btn:hover {
+            transform: translateY(-2px);
+        }
+        .instruction-text {
+            text-align: center;
+            margin-top: 8px;
+            color: #6b8b6b;
+            font-size: 0.75em;
+            font-style: italic;
+            position: relative;
+            z-index: 5;
+        }
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            animation: floatUp 2s ease-out forwards;
+            font-size: 1.5em;
+        }
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px) scale(0.3);
+            }
+        }
+        @media (max-width: 768px) {
+            .pokemon-display-area {
+                flex-direction: column;
+                align-items: center;
+            }
+            .pokemon-sprite-container {
+                flex: 0 0 160px;
+                min-height: 160px;
+            }
+            .pokemon-sprite-container img {
+                width: 130px;
+                height: 130px;
+            }
+            .pokemon-name-display {
+                font-size: 1.5em;
+                text-align: center;
+            }
+            .controls-area {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pokedex-outer">
+        <div class="pokedex-inner">
+            <div class="pokedex-top">
+                <div class="dex-indicator">
+                    <div class="dex-light blue"></div>
+                    <div class="dex-light yellow"></div>
+                    <div class="dex-light green"></div>
+                </div>
+                <div class="dex-title-area">
+                    <div class="dex-title">Pokédex Nacional</div>
+                    <div class="dex-subtitle">◆ 1010 Pokémon - Todas las Generaciones ◆</div>
+                </div>
+                <div style="width:60px;"></div>
+            </div>
+            <div class="screen-container">
+                <div class="screen-inner" id="screenInner">
+                    <div class="pokemon-display-area">
+                        <div class="pokemon-sprite-container" id="pokemonSprite" onclick="handleTap()">
+                            <div class="tap-glow" id="tapGlow"></div>
+                            <img id="pokemonImg" src="" alt="Pokémon" style="width:170px;height:170px;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><circle cx=%22100%22 cy=%22100%22 r=%2280%22 fill=%22%23ddd%22 stroke=%22%23999%22 stroke-width=%223%22/><text x=%22100%22 y=%22110%22 text-anchor=%22middle%22 font-size=%2240%22>?</text></svg>'">
+                        </div>
+                        <div class="pokemon-info-panel" id="pokemonInfo"></div>
+                    </div>
+                    <div class="evolution-bar" id="evolutionBar"></div>
+                    <div class="instruction-text" id="instructionText">✨ Toca al Pokémon para ver sus datos de combate ✨</div>
+                </div>
+            </div>
+            <div class="controls-area">
+                <div class="select-wrapper">
+                    <select id="pokemonSelect"><option value="">🎮 Busca un Pokémon (1010 disponibles)...</option></select>
+                </div>
+                <div class="dex-buttons">
+                    <button class="dex-btn red" onclick="randomPokemon()" title="Pokémon aleatorio">🔀</button>
+                    <button class="dex-btn blue" onclick="handleTap()" title="Ver datos">📋</button>
+                    <button class="dex-btn green" onclick="cycleEvolution()" title="Siguiente evolución">⏭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== GENERADOR DE DATOS PARA 1010 POKÉMON ====================
+        const typeEffectiveness = {
+            'normal': { strongAgainst: [], weakTo: ['fighting'] },
+            'fire': { strongAgainst: ['grass', 'ice', 'bug', 'steel'], weakTo: ['water', 'ground', 'rock'] },
+            'water': { strongAgainst: ['fire', 'ground', 'rock'], weakTo: ['electric', 'grass'] },
+            'electric': { strongAgainst: ['water', 'flying'], weakTo: ['ground'] },
+            'grass': { strongAgainst: ['water', 'ground', 'rock'], weakTo: ['fire', 'ice', 'poison', 'flying',
+            'bug'] },
+            'ice': { strongAgainst: ['grass', 'ground', 'flying', 'dragon'], weakTo: ['fire', 'fighting', 'rock',
+                    'steel'
+                ] },
+            'fighting': { strongAgainst: ['normal', 'ice', 'rock', 'dark', 'steel'], weakTo: ['flying', 'psychic',
+                    'fairy'
+                ] },
+            'poison': { strongAgainst: ['grass', 'fairy'], weakTo: ['ground', 'psychic'] },
+            'ground': { strongAgainst: ['fire', 'electric', 'poison', 'rock', 'steel'], weakTo: ['water', 'grass',
+                'ice'] },
+            'flying': { strongAgainst: ['grass', 'fighting', 'bug'], weakTo: ['electric', 'ice', 'rock'] },
+            'psychic': { strongAgainst: ['fighting', 'poison'], weakTo: ['bug', 'ghost', 'dark'] },
+            'bug': { strongAgainst: ['grass', 'psychic', 'dark'], weakTo: ['fire', 'flying', 'rock'] },
+            'rock': { strongAgainst: ['fire', 'ice', 'flying', 'bug'], weakTo: ['water', 'grass', 'fighting', 'ground',
+                    'steel'
+                ] },
+            'ghost': { strongAgainst: ['psychic', 'ghost'], weakTo: ['ghost', 'dark'] },
+            'dragon': { strongAgainst: ['dragon'], weakTo: ['ice', 'dragon', 'fairy'] },
+            'dark': { strongAgainst: ['psychic', 'ghost'], weakTo: ['fighting', 'bug', 'fairy'] },
+            'steel': { strongAgainst: ['ice', 'rock', 'fairy'], weakTo: ['fire', 'fighting', 'ground'] },
+            'fairy': { strongAgainst: ['fighting', 'dragon', 'dark'], weakTo: ['poison', 'steel'] }
+        };
+
+        function getEffectiveness(types) {
+            const strongAgainst = new Set();
+            const weakTo = new Set();
+            types.forEach(type => {
+                const eff = typeEffectiveness[type];
+                if (eff) {
+                    eff.strongAgainst.forEach(t => strongAgainst.add(t));
+                    eff.weakTo.forEach(t => weakTo.add(t));
+                }
+            });
+            return { strongAgainst: Array.from(strongAgainst), weakTo: Array.from(weakTo) };
+        }
+
+        // Datos de todos los 1010 Pokémon (estructura optimizada)
+        const pokemonData = {};
+
+        // Nombres base por generación para generación procedural
+        const pokemonNames = [
+            // Gen 1 (1-151)
+            'Bulbasaur', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Charizard', 'Squirtle', 'Wartortle',
+            'Blastoise',
+            'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgey', 'Pidgeotto', 'Pidgeot',
+            'Rattata',
+            'Raticate', 'Spearow', 'Fearow', 'Ekans', 'Arbok', 'Pikachu', 'Raichu', 'Sandshrew', 'Sandslash',
+            'Nidoran♀',
+            'Nidorina', 'Nidoqueen', 'Nidoran♂', 'Nidorino', 'Nidoking', 'Clefairy', 'Clefable', 'Vulpix', 'Ninetales',
+            'Jigglypuff', 'Wigglytuff', 'Zubat', 'Golbat', 'Oddish', 'Gloom', 'Vileplume', 'Paras', 'Parasect',
+            'Venonat',
+            'Venomoth', 'Diglett', 'Dugtrio', 'Meowth', 'Persian', 'Psyduck', 'Golduck', 'Mankey', 'Primeape',
+            'Growlithe',
+            'Arcanine', 'Poliwag', 'Poliwhirl', 'Poliwrath', 'Abra', 'Kadabra', 'Alakazam', 'Machop', 'Machoke',
+            'Machamp',
+            'Bellsprout', 'Weepinbell', 'Victreebel', 'Tentacool', 'Tentacruel', 'Geodude', 'Graveler', 'Golem',
+            'Ponyta',
+            'Rapidash', 'Slowpoke', 'Slowbro', 'Magnemite', 'Magneton', "Farfetch'd", 'Doduo', 'Dodrio', 'Seel',
+            'Dewgong',
+            'Grimer', 'Muk', 'Shellder', 'Cloyster', 'Gastly', 'Haunter', 'Gengar', 'Onix', 'Drowzee', 'Hypno',
+            'Krabby',
+            'Kingler', 'Voltorb', 'Electrode', 'Exeggcute', 'Exeggutor', 'Cubone', 'Marowak', 'Hitmonlee', 'Hitmonchan',
+            'Lickitung', 'Koffing', 'Weezing', 'Rhyhorn', 'Rhydon', 'Chansey', 'Tangela', 'Kangaskhan', 'Horsea',
+            'Seadra',
+            'Goldeen', 'Seaking', 'Staryu', 'Starmie', 'Mr. Mime', 'Scyther', 'Jynx', 'Electabuzz', 'Magmar', 'Pinsir',
+            'Tauros', 'Magikarp', 'Gyarados', 'Lapras', 'Ditto', 'Eevee', 'Vaporeon', 'Jolteon', 'Flareon', 'Porygon',
+            'Omanyte', 'Omastar', 'Kabuto', 'Kabutops', 'Aerodactyl', 'Snorlax', 'Articuno', 'Zapdos', 'Moltres',
+            'Dratini',
+            'Dragonair', 'Dragonite', 'Mewtwo', 'Mew',
+            // Gen 2 (152-251)
+            'Chikorita', 'Bayleef', 'Meganium', 'Cyndaquil', 'Quilava', 'Typhlosion', 'Totodile', 'Croconaw',
+            'Feraligatr',
+            'Sentret', 'Furret', 'Hoothoot', 'Noctowl', 'Ledyba', 'Ledian', 'Spinarak', 'Ariados', 'Crobat', 'Chinchou',
+            'Lanturn', 'Pichu', 'Cleffa', 'Igglybuff', 'Togepi', 'Togetic', 'Natu', 'Xatu', 'Mareep', 'Flaaffy',
+            'Ampharos',
+            'Bellossom', 'Marill', 'Azumarill', 'Sudowoodo', 'Politoed', 'Hoppip', 'Skiploom', 'Jumpluff', 'Aipom',
+            'Sunkern',
+            'Sunflora', 'Yanma', 'Wooper', 'Quagsire', 'Espeon', 'Umbreon', 'Murkrow', 'Slowking', 'Misdreavus',
+            'Unown',
+            'Wobbuffet', 'Girafarig', 'Pineco', 'Forretress', 'Dunsparce', 'Gligar', 'Steelix', 'Snubbull', 'Granbull',
+            'Qwilfish', 'Scizor', 'Shuckle', 'Heracross', 'Sneasel', 'Teddiursa', 'Ursaring', 'Slugma', 'Magcargo',
+            'Swinub',
+            'Piloswine', 'Corsola', 'Remoraid', 'Octillery', 'Delibird', 'Mantine', 'Skarmory', 'Houndour', 'Houndoom',
+            'Kingdra', 'Phanpy', 'Donphan', 'Porygon2', 'Stantler', 'Smeargle', 'Tyrogue', 'Hitmontop', 'Smoochum',
+            'Elekid',
+            'Magby', 'Miltank', 'Blissey', 'Raikou', 'Entei', 'Suicune', 'Larvitar', 'Pupitar', 'Tyranitar', 'Lugia',
+            'Ho-Oh', 'Celebi',
+            // Gen 3 (252-386)
+            'Treecko', 'Grovyle', 'Sceptile', 'Torchic', 'Combusken', 'Blaziken', 'Mudkip', 'Marshtomp', 'Swampert',
+            'Poochyena', 'Mightyena', 'Zigzagoon', 'Linoone', 'Wurmple', 'Silcoon', 'Beautifly', 'Cascoon', 'Dustox',
+            'Lotad', 'Lombre', 'Ludicolo', 'Seedot', 'Nuzleaf', 'Shiftry', 'Taillow', 'Swellow', 'Wingull', 'Pelipper',
+            'Ralts', 'Kirlia', 'Gardevoir', 'Surskit', 'Masquerain', 'Shroomish', 'Breloom', 'Slakoth', 'Vigoroth',
+            'Slaking', 'Nincada', 'Ninjask', 'Shedinja', 'Whismur', 'Loudred', 'Exploud', 'Makuhita', 'Hariyama',
+            'Azurill',
+            'Nosepass', 'Skitty', 'Delcatty', 'Sableye', 'Mawile', 'Aron', 'Lairon', 'Aggron', 'Meditite', 'Medicham',
+            'Electrike', 'Manectric', 'Plusle', 'Minun', 'Volbeat', 'Illumise', 'Roselia', 'Gulpin', 'Swalot',
+            'Carvanha',
+            'Sharpedo', 'Wailmer', 'Wailord', 'Numel', 'Camerupt', 'Torkoal', 'Spoink', 'Grumpig', 'Spinda', 'Trapinch',
+            'Vibrava', 'Flygon', 'Cacnea', 'Cacturne', 'Swablu', 'Altaria', 'Zangoose', 'Seviper', 'Lunatone',
+            'Solrock',
+            'Barboach', 'Whiscash', 'Corphish', 'Crawdaunt', 'Baltoy', 'Claydol', 'Lileep', 'Cradily', 'Anorith',
+            'Armaldo',
+            'Feebas', 'Milotic', 'Castform', 'Kecleon', 'Shuppet', 'Banette', 'Duskull', 'Dusclops', 'Tropius',
+            'Chimecho',
+            'Absol', 'Wynaut', 'Snorunt', 'Glalie', 'Spheal', 'Sealeo', 'Walrein', 'Clamperl', 'Huntail', 'Gorebyss',
+            'Relicanth', 'Luvdisc', 'Bagon', 'Shelgon', 'Salamence', 'Beldum', 'Metang', 'Metagross', 'Regirock',
+            'Regice',
+            'Registeel', 'Latias', 'Latios', 'Kyogre', 'Groudon', 'Rayquaza', 'Jirachi', 'Deoxys',
+            // Gen 4 (387-493)
+            'Turtwig', 'Grotle', 'Torterra', 'Chimchar', 'Monferno', 'Infernape', 'Piplup', 'Prinplup', 'Empoleon',
+            'Starly',
+            'Staravia', 'Staraptor', 'Bidoof', 'Bibarel', 'Kricketot', 'Kricketune', 'Shinx', 'Luxio', 'Luxray',
+            'Budew',
+            'Roserade', 'Cranidos', 'Rampardos', 'Shieldon', 'Bastiodon', 'Burmy', 'Wormadam', 'Mothim', 'Combee',
+            'Vespiquen', 'Pachirisu', 'Buizel', 'Floatzel', 'Cherubi', 'Cherrim', 'Shellos', 'Gastrodon', 'Ambipom',
+            'Drifloon', 'Drifblim', 'Buneary', 'Lopunny', 'Mismagius', 'Honchkrow', 'Glameow', 'Purugly', 'Chingling',
+            'Stunky', 'Skuntank', 'Bronzor', 'Bronzong', 'Bonsly', 'Mime Jr.', 'Happiny', 'Chatot', 'Spiritomb',
+            'Gible',
+            'Gabite', 'Garchomp', 'Munchlax', 'Riolu', 'Lucario', 'Hippopotas', 'Hippowdon', 'Skorupi', 'Drapion',
+            'Croagunk',
+            'Toxicroak', 'Carnivine', 'Finneon', 'Lumineon', 'Mantyke', 'Snover', 'Abomasnow', 'Weavile', 'Magnezone',
+            'Lickilicky', 'Rhyperior', 'Tangrowth', 'Electivire', 'Magmortar', 'Togekiss', 'Yanmega', 'Leafeon',
+            'Glaceon',
+            'Gliscor', 'Mamoswine', 'Porygon-Z', 'Gallade', 'Probopass', 'Dusknoir', 'Froslass', 'Rotom', 'Uxie',
+            'Mesprit',
+            'Azelf', 'Dialga', 'Palkia', 'Heatran', 'Regigigas', 'Giratina', 'Cresselia', 'Phione', 'Manaphy',
+            'Darkrai',
+            'Shaymin', 'Arceus',
+            // Gen 5 (494-649)
+            'Victini', 'Snivy', 'Servine', 'Serperior', 'Tepig', 'Pignite', 'Emboar', 'Oshawott', 'Dewott', 'Samurott',
+            'Patrat', 'Watchog', 'Lillipup', 'Herdier', 'Stoutland', 'Purrloin', 'Liepard', 'Pansage', 'Simisage',
+            'Pansear',
+            'Simisear', 'Panpour', 'Simipour', 'Munna', 'Musharna', 'Pidove', 'Tranquill', 'Unfezant', 'Blitzle',
+            'Zebstrika', 'Roggenrola', 'Boldore', 'Gigalith', 'Woobat', 'Swoobat', 'Drilbur', 'Excadrill', 'Audino',
+            'Timburr', 'Gurdurr', 'Conkeldurr', 'Tympole', 'Palpitoad', 'Seismitoad', 'Throh', 'Sawk', 'Sewaddle',
+            'Swadloon', 'Leavanny', 'Venipede', 'Whirlipede', 'Scolipede', 'Cottonee', 'Whimsicott', 'Petilil',
+            'Lilligant',
+            'Basculin', 'Sandile', 'Krokorok', 'Krookodile', 'Darumaka', 'Darmanitan', 'Maractus', 'Dwebble',
+            'Crustle',
+            'Scraggy', 'Scrafty', 'Sigilyph', 'Yamask', 'Cofagrigus', 'Tirtouga', 'Carracosta', 'Archen', 'Archeops',
+            'Trubbish', 'Garbodor', 'Zorua', 'Zoroark', 'Minccino', 'Cinccino', 'Gothita', 'Gothorita', 'Gothitelle',
+            'Solosis', 'Duosion', 'Reuniclus', 'Ducklett', 'Swanna', 'Vanillite', 'Vanillish', 'Vanilluxe', 'Deerling',
+            'Sawsbuck', 'Emolga', 'Karrablast', 'Escavalier', 'Foongus', 'Amoonguss', 'Frillish', 'Jellicent',
+            'Alomomola',
+            'Joltik', 'Galvantula', 'Ferroseed', 'Ferrothorn', 'Klink', 'Klang', 'Klinklang', 'Tynamo', 'Eelektrik',
+            'Eelektross', 'Elgyem', 'Beheeyem', 'Litwick', 'Lampent', 'Chandelure', 'Axew', 'Fraxure', 'Haxorus',
+            'Cubchoo',
+            'Beartic', 'Cryogonal', 'Shelmet', 'Accelgor', 'Stunfisk', 'Mienfoo', 'Mienshao', 'Druddigon', 'Golett',
+            'Golurk', 'Pawniard', 'Bisharp', 'Bouffalant', 'Rufflet', 'Braviary', 'Vullaby', 'Mandibuzz', 'Heatmor',
+            'Durant', 'Deino', 'Zweilous', 'Hydreigon', 'Larvesta', 'Volcarona', 'Cobalion', 'Terrakion', 'Virizion',
+            'Tornadus', 'Thundurus', 'Reshiram', 'Zekrom', 'Landorus', 'Kyurem', 'Keldeo', 'Meloetta', 'Genesect',
+            // Gen 6 (650-721)
+            'Chespin', 'Quilladin', 'Chesnaught', 'Fennekin', 'Braixen', 'Delphox', 'Froakie', 'Frogadier', 'Greninja',
+            'Bunnelby', 'Diggersby', 'Fletchling', 'Fletchinder', 'Talonflame', 'Scatterbug', 'Spewpa', 'Vivillon',
+            'Litleo',
+            'Pyroar', 'Flabébé', 'Floette', 'Florges', 'Skiddo', 'Gogoat', 'Pancham', 'Pangoro', 'Furfrou', 'Espurr',
+            'Meowstic', 'Honedge', 'Doublade', 'Aegislash', 'Spritzee', 'Aromatisse', 'Swirlix', 'Slurpuff',
+            'Inkay',
+            'Malamar', 'Binacle', 'Barbaracle', 'Skrelp', 'Dragalge', 'Clauncher', 'Clawitzer', 'Helioptile',
+            'Heliolisk',
+            'Tyrunt', 'Tyrantrum', 'Amaura', 'Aurorus', 'Sylveon', 'Hawlucha', 'Dedenne', 'Carbink', 'Goomy',
+            'Sliggoo',
+            'Goodra', 'Klefki', 'Phantump', 'Trevenant', 'Pumpkaboo', 'Gourgeist', 'Bergmite', 'Avalugg', 'Noibat',
+            'Noivern', 'Xerneas', 'Yveltal', 'Zygarde', 'Diancie', 'Hoopa', 'Volcanion',
+            // Gen 7 (722-809)
+            'Rowlet', 'Dartrix', 'Decidueye', 'Litten', 'Torracat', 'Incineroar', 'Popplio', 'Brionne', 'Primarina',
+            'Pikipek', 'Trumbeak', 'Toucannon', 'Yungoos', 'Gumshoos', 'Grubbin', 'Charjabug', 'Vikavolt', 'Crabrawler',
+            'Crabominable', 'Oricorio', 'Cutiefly', 'Ribombee', 'Rockruff', 'Lycanroc', 'Wishiwashi', 'Mareanie',
+            'Toxapex',
+            'Mudbray', 'Mudsdale', 'Dewpider', 'Araquanid', 'Fomantis', 'Lurantis', 'Morelull', 'Shiinotic', 'Salandit',
+            'Salazzle', 'Stufful', 'Bewear', 'Bounsweet', 'Steenee', 'Tsareena', 'Comfey', 'Oranguru', 'Passimian',
+            'Wimpod', 'Golisopod', 'Sandygast', 'Palossand', 'Pyukumuku', 'Type: Null', 'Silvally', 'Minior', 'Komala',
+            'Turtonator', 'Togedemaru', 'Mimikyu', 'Bruxish', 'Drampa', 'Dhelmise', 'Jangmo-o', 'Hakamo-o', 'Kommo-o',
+            'Tapu Koko', 'Tapu Lele', 'Tapu Bulu', 'Tapu Fini', 'Cosmog', 'Cosmoem', 'Solgaleo', 'Lunala', 'Nihilego',
+            'Buzzwole', 'Pheromosa', 'Xurkitree', 'Celesteela', 'Kartana', 'Guzzlord', 'Necrozma', 'Magearna',
+            'Marshadow',
+            'Poipole', 'Naganadel', 'Stakataka', 'Blacephalon', 'Zeraora', 'Meltan', 'Melmetal',
+            // Gen 8 (810-905)
+            'Grookey', 'Thwackey', 'Rillaboom', 'Scorbunny', 'Raboot', 'Cinderace', 'Sobble', 'Drizzile', 'Inteleon',
+            'Skwovet', 'Greedent', 'Rookidee', 'Corvisquire', 'Corviknight', 'Blipbug', 'Dottler', 'Orbeetle',
+            'Nickit',
+            'Thievul', 'Gossifleur', 'Eldegoss', 'Wooloo', 'Dubwool', 'Chewtle', 'Drednaw', 'Yamper', 'Boltund',
+            'Rolycoly',
+            'Carkol', 'Coalossal', 'Applin', 'Flapple', 'Appletun', 'Silicobra', 'Sandaconda', 'Cramorant', 'Arrokuda',
+            'Barraskewda', 'Toxel', 'Toxtricity', 'Sizzlipede', 'Centiskorch', 'Clobbopus', 'Grapploct', 'Sinistea',
+            'Polteageist', 'Hatenna', 'Hattrem', 'Hatterene', 'Impidimp', 'Morgrem', 'Grimmsnarl', 'Obstagoon',
+            'Perrserker',
+            'Cursola', "Sirfetch'd", 'Mr. Rime', 'Runerigus', 'Milcery', 'Alcremie', 'Falinks', 'Pincurchin',
+            'Snom',
+            'Frosmoth', 'Stonjourner', 'Eiscue', 'Indeedee', 'Morpeko', 'Cufant', 'Copperajah', 'Dracozolt',
+            'Arctozolt',
+            'Dracovish', 'Arctovish', 'Duraludon', 'Dreepy', 'Drakloak', 'Dragapult', 'Zacian', 'Zamazenta',
+            'Eternatus',
+            'Kubfu', 'Urshifu', 'Zarude', 'Regieleki', 'Regidrago', 'Glastrier', 'Spectrier', 'Calyrex',
+            // Gen 9 (906-1010)
+            'Sprigatito', 'Floragato', 'Meowscarada', 'Fuecoco', 'Crocalor', 'Skeledirge', 'Quaxly', 'Quaxwell',
+            'Quaquaval',
+            'Lechonk', 'Oinkologne', 'Tarountula', 'Spidops', 'Nymble', 'Lokix', 'Pawmi', 'Pawmo', 'Pawmot',
+            'Tandemaus',
+            'Maushold', 'Fidough', 'Dachsbun', 'Smoliv', 'Dolliv', 'Arboliva', 'Squawkabilly', 'Nacli', 'Naclstack',
+            'Garganacl', 'Charcadet', 'Armarouge', 'Ceruledge', 'Tadbulb', 'Bellibolt', 'Wattrel', 'Kilowattrel',
+            'Maschiff',
+            'Mabosstiff', 'Shroodle', 'Grafaiai', 'Bramblin', 'Brambleghast', 'Toedscool', 'Toedscruel', 'Klawf',
+            'Capsakid',
+            'Scovillain', 'Rellor', 'Rabsca', 'Flittle', 'Espathra', 'Tinkatink', 'Tinkatuff', 'Tinkaton', 'Wiglett',
+            'Wugtrio', 'Bombirdier', 'Finizen', 'Palafin', 'Varoom', 'Revavroom', 'Cyclizar', 'Orthworm', 'Glimmet',
+            'Glimmora', 'Greavard', 'Houndstone', 'Flamigo', 'Cetoddle', 'Cetitan', 'Veluza', 'Dondozo', 'Tatsugiri',
+            'Annihilape', 'Clodsire', 'Farigiraf', 'Dudunsparce', 'Kingambit', 'Great Tusk', 'Scream Tail',
+            'Brute Bonnet',
+            'Flutter Mane', 'Slither Wing', 'Sandy Shocks', 'Iron Treads', 'Iron Bundle', 'Iron Hands', 'Iron Jugulis',
+            'Iron Moth', 'Iron Thorns', 'Frigibax', 'Arctibax', 'Baxcalibur', 'Gimmighoul', 'Gholdengo', 'Wo-Chien',
+            'Chien-Pao', 'Ting-Lu', 'Chi-Yu', 'Roaring Moon', 'Iron Valiant', 'Koraidon', 'Miraidon', 'Walking Wake',
+            'Iron Leaves', 'Dipplin', 'Poltchageist', 'Sinistcha', 'Okidogi', 'Munkidori', 'Fezandipiti', 'Ogerpon',
+            'Archaludon', 'Hydrapple', 'Gouging Fire', 'Raging Bolt', 'Iron Boulder', 'Iron Crown', 'Terapagos',
+            'Pecharunt'
+        ];
+
+        // Generar datos para todos los 1010 Pokémon
+        for (let i = 0; i < pokemonNames.length; i++) {
+            const id = i + 1;
+            const name = pokemonNames[i];
+            let types = ['normal'];
+            let evolution = [id];
+            let stats = { hp: 50, attack: 50, defense: 50, speed: 50 };
+
+            // Asignar tipos según el nombre (aproximación)
+            const nameLower = name.toLowerCase();
+            if (nameLower.includes('char') || nameLower.includes('fire') || nameLower.includes('flame') || nameLower
+                .includes('mag') || nameLower.includes('heat') || nameLower.includes('entei') || nameLower.includes(
+                    'ho-oh') || nameLower.includes('moltres') || nameLower.includes('torchic') || nameLower.includes(
+                    'chimchar') || nameLower.includes('tepig') || nameLower.includes('fennekin') || nameLower.includes(
+                    'litten') || nameLower.includes('scorbunny') || nameLower.includes('fuecoco')) {
+                types = ['fire'];
+            } else if (nameLower.includes('squirtle') || nameLower.includes('wartortle') || nameLower.includes(
+                    'blastoise') || nameLower.includes('water') || nameLower.includes('aqua') || nameLower.includes(
+                    'sea') || nameLower.includes('marine') || nameLower.includes('totodile') || nameLower.includes(
+                    'mudkip') || nameLower.includes('piplup') || nameLower.includes('oshawott') || nameLower.includes(
+                    'froakie') || nameLower.includes('popplio') || nameLower.includes('sobble') || nameLower.includes(
+                    'quaxly') || nameLower.includes('kyogre') || nameLower.includes('suicune') || nameLower.includes(
+                    'manaphy') || nameLower.includes('phione')) {
+                types = ['water'];
+            } else if (nameLower.includes('bulbasaur') || nameLower.includes('ivysaur') || nameLower.includes(
+                    'venusaur') || nameLower.includes('grass') || nameLower.includes('leaf') || nameLower.includes(
+                    'forest') || nameLower.includes('chikorita') || nameLower.includes('treecko') || nameLower.includes(
+                    'turtwig') || nameLower.includes('snivy') || nameLower.includes('chespin') || nameLower.includes(
+                    'rowlet') || nameLower.includes('grookey') || nameLower.includes('sprigatito') || nameLower
+                .includes('shaymin') || nameLower.includes('celebi')) {
+                types = ['grass'];
+            } else if (nameLower.includes('pikachu') || nameLower.includes('raichu') || nameLower.includes('pichu') ||
+                nameLower.includes('elect') || nameLower.includes('volt') || nameLower.includes('zap') || nameLower
+                .includes('thunder') || nameLower.includes('raikou') || nameLower.includes('zeraora')) {
+                types = ['electric'];
+            } else if (nameLower.includes('ice') || nameLower.includes('fro') || nameLower.includes('artic') ||
+                nameLower.includes('regice') || nameLower.includes('glaceon') || nameLower.includes('cryogonal')) {
+                types = ['ice'];
+            } else if (nameLower.includes('dragon') || nameLower.includes('draco') || nameLower.includes('sala') ||
+                nameLower.includes('rayquaza') || nameLower.includes('dialga') || nameLower.includes('palkia') ||
+                nameLower.includes('giratina') || nameLower.includes('reshiram') || nameLower.includes('zekrom') ||
+                nameLower.includes('kyurem')) {
+                types = ['dragon'];
+            } else if (nameLower.includes('ghost') || nameLower.includes('gast') || nameLower.includes('haunt') ||
+                nameLower.includes('gengar') || nameLower.includes('misdreavus') || nameLower.includes('dusk') ||
+                nameLower.includes('shuppet') || nameLower.includes('spiritomb') || nameLower.includes('giratina')) {
+                types = ['ghost'];
+            } else if (nameLower.includes('psychic') || nameLower.includes('psy') || nameLower.includes('mew') ||
+                nameLower.includes('alakazam') || nameLower.includes('espeon') || nameLower.includes('gardevoir') ||
+                nameLower.includes('uxie') || nameLower.includes('mesprit') || nameLower.includes('azelf')) {
+                types = ['psychic'];
+            } else if (nameLower.includes('fight') || nameLower.includes('mach') || nameLower.includes('hitmon') ||
+                nameLower.includes('lucario') || nameLower.includes('keldeo') || nameLower.includes('cobalion') ||
+                nameLower.includes('terrakion') || nameLower.includes('virizion')) {
+                types = ['fighting'];
+            } else if (nameLower.includes('dark') || nameLower.includes('umbreon') || nameLower.includes('absol') ||
+                nameLower.includes('darkrai') || nameLower.includes('zorua') || nameLower.includes('zoroark')) {
+                types = ['dark'];
+            } else if (nameLower.includes('steel') || nameLower.includes('magn') || nameLower.includes('steelix') ||
+                nameLower.includes('scizor') || nameLower.includes('metagross') || nameLower.includes('jirachi') ||
+                nameLower.includes('dialga') || nameLower.includes('registeel')) {
+                types = ['steel'];
+            } else if (nameLower.includes('fairy') || nameLower.includes('clef') || nameLower.includes('jiggly') ||
+                nameLower.includes('togepi') || nameLower.includes('sylveon') || nameLower.includes('xerneas') ||
+                nameLower.includes('diancie')) {
+                types = ['fairy'];
+            } else if (nameLower.includes('poison') || nameLower.includes('weed') || nameLower.includes('ekans') ||
+                nameLower.includes('arbok') || nameLower.includes('koffing') || nameLower.includes('weezing') ||
+                nameLower.includes('grimer') || nameLower.includes('muk')) {
+                types = ['poison'];
+            } else if (nameLower.includes('ground') || nameLower.includes('sand') || nameLower.includes('dig') ||
+                nameLower.includes('groudon') || nameLower.includes('golem') || nameLower.includes('rhydon')) {
+                types = ['ground'];
+            } else if (nameLower.includes('fly') || nameLower.includes('bird') || nameLower.includes('pidge') ||
+                nameLower.includes('zubat') || nameLower.includes('golbat') || nameLower.includes('crobat') ||
+                nameLower.includes('togekiss') || nameLower.includes('rayquaza')) {
+                types = ['flying'];
+            } else if (nameLower.includes('bug') || nameLower.includes('cater') || nameLower.includes('beedrill') ||
+                nameLower.includes('butterfree') || nameLower.includes('pinsir') || nameLower.includes('heracross') ||
+                nameLower.includes('volcarona') || nameLower.includes('genesect')) {
+                types = ['bug'];
+            } else if (nameLower.includes('rock') || nameLower.includes('onix') || nameLower.includes('geodude') ||
+                nameLower.includes('regirock') || nameLower.includes('aero') || nameLower.includes('omanyte') ||
+                nameLower.includes('kabuto')) {
+                types = ['rock'];
+            }
+
+            // Tipos secundarios
+            if (nameLower.includes('charizard') || nameLower.includes('gyarados') || nameLower.includes('aerodactyl') ||
+                nameLower.includes('dragonite') || nameLower.includes('salamence') || nameLower.includes('rayquaza') ||
+                nameLower.includes('ho-oh') || nameLower.includes('lugia') || nameLower.includes('togekiss') ||
+                nameLower.includes('noivern')) {
+                types = types[0] === 'dragon' ? ['dragon', 'flying'] : types[0] === 'fire' ? ['fire', 'flying'] : ['normal',
+                    'flying'
+                ];
+            }
+            if (nameLower.includes('gengar') || nameLower.includes('gastly') || nameLower.includes('haunter')) types =
+                ['ghost', 'poison'];
+            if (nameLower.includes('bulbasaur') || nameLower.includes('ivysaur') || nameLower.includes('venusaur')) types =
+                ['grass', 'poison'];
+            if (nameLower.includes('pidgeot') || nameLower.includes('pidgey') || nameLower.includes('pidgeotto')) types =
+                ['normal', 'flying'];
+            if (nameLower.includes('articuno')) types = ['ice', 'flying'];
+            if (nameLower.includes('zapdos')) types = ['electric', 'flying'];
+            if (nameLower.includes('moltres')) types = ['fire', 'flying'];
+            if (nameLower.includes('butterfree')) types = ['bug', 'flying'];
+            if (nameLower.includes('beedrill')) types = ['bug', 'poison'];
+            if (nameLower.includes('nidoqueen') || nameLower.includes('nidoking')) types = ['poison', 'ground'];
+
+            // Evoluciones de iniciales
+            if (id === 2) evolution = [1, 2, 3];
+            if (id === 3) evolution = [1, 2, 3];
+            if (id === 1) evolution = [1, 2, 3];
+            if (id === 5) evolution = [4, 5, 6];
+            if (id === 6) evolution = [4, 5, 6];
+            if (id === 4) evolution = [4, 5, 6];
+            if (id === 8) evolution = [7, 8, 9];
+            if (id === 9) evolution = [7, 8, 9];
+            if (id === 7) evolution = [7, 8, 9];
+            if (id === 25) evolution = [172, 25, 26];
+            if (id === 26) evolution = [172, 25, 26];
+            if (id === 172) evolution = [172, 25, 26];
+            if (id === 153) evolution = [152, 153, 154];
+            if (id === 154) evolution = [152, 153, 154];
+            if (id === 152) evolution = [152, 153, 154];
+            if (id === 156) evolution = [155, 156, 157];
+            if (id === 157) evolution = [155, 156, 157];
+            if (id === 155) evolution = [155, 156, 157];
+            if (id === 159) evolution = [158, 159, 160];
+            if (id === 160) evolution = [158, 159, 160];
+            if (id === 158) evolution = [158, 159, 160];
+            if (id === 253) evolution = [252, 253, 254];
+            if (id === 254) evolution = [252, 253, 254];
+            if (id === 252) evolution = [252, 253, 254];
+            if (id === 256) evolution = [255, 256, 257];
+            if (id === 257) evolution = [255, 256, 257];
+            if (id === 255) evolution = [255, 256, 257];
+            if (id === 259) evolution = [258, 259, 260];
+            if (id === 260) evolution = [258, 259, 260];
+            if (id === 258) evolution = [258, 259, 260];
+            if (id === 388) evolution = [387, 388, 389];
+            if (id === 389) evolution = [387, 388, 389];
+            if (id === 387) evolution = [387, 388, 389];
+            if (id === 391) evolution = [390, 391, 392];
+            if (id === 392) evolution = [390, 391, 392];
+            if (id === 390) evolution = [390, 391, 392];
+            if (id === 394) evolution = [393, 394, 395];
+            if (id === 395) evolution = [393, 394, 395];
+            if (id === 393) evolution = [393, 394, 395];
+            if (id === 496) evolution = [495, 496, 497];
+            if (id === 497) evolution = [495, 496, 497];
+            if (id === 495) evolution = [495, 496, 497];
+            if (id === 499) evolution = [498, 499, 500];
+            if (id === 500) evolution = [498, 499, 500];
+            if (id === 498) evolution = [498, 499, 500];
+            if (id === 502) evolution = [501, 502, 503];
+            if (id === 503) evolution = [501, 502, 503];
+            if (id === 501) evolution = [501, 502, 503];
+            if (id === 651) evolution = [650, 651, 652];
+            if (id === 652) evolution = [650, 651, 652];
+            if (id === 650) evolution = [650, 651, 652];
+            if (id === 654) evolution = [653, 654, 655];
+            if (id === 655) evolution = [653, 654, 655];
+            if (id === 653) evolution = [653, 654, 655];
+            if (id === 657) evolution = [656, 657, 658];
+            if (id === 658) evolution = [656, 657, 658];
+            if (id === 656) evolution = [656, 657, 658];
+            if (id === 723) evolution = [722, 723, 724];
+            if (id === 724) evolution = [722, 723, 724];
+            if (id === 722) evolution = [722, 723, 724];
+            if (id === 726) evolution = [725, 726, 727];
+            if (id === 727) evolution = [725, 726, 727];
+            if (id === 725) evolution = [725, 726, 727];
+            if (id === 729) evolution = [728, 729, 730];
+            if (id === 730) evolution = [728, 729, 730];
+            if (id === 728) evolution = [728, 729, 730];
+            if (id === 811) evolution = [810, 811, 812];
+            if (id === 812) evolution = [810, 811, 812];
+            if (id === 810) evolution = [810, 811, 812];
+            if (id === 814) evolution = [813, 814, 815];
+            if (id === 815) evolution = [813, 814, 815];
+            if (id === 813) evolution = [813, 814, 815];
+            if (id === 817) evolution = [816, 817, 818];
+            if (id === 818) evolution = [816, 817, 818];
+            if (id === 816) evolution = [816, 817, 818];
+            if (id === 907) evolution = [906, 907, 908];
+            if (id === 908) evolution = [906, 907, 908];
+            if (id === 906) evolution = [906, 907, 908];
+            if (id === 910) evolution = [909, 910, 911];
+            if (id === 911) evolution = [909, 910, 911];
+            if (id === 909) evolution = [909, 910, 911];
+            if (id === 913) evolution = [912, 913, 914];
+            if (id === 914) evolution = [912, 913, 914];
+            if (id === 912) evolution = [912, 913, 914];
+            // Eeveeluciones
+            if (id === 134 || id === 135 || id === 136 || id === 196 || id === 197 || id === 470 || id === 471 || id ===
+                700) evolution = [133, id];
+            if (id === 133) evolution = [133, 134, 135, 136, 196, 197, 470, 471, 700];
+
+            pokemonData[id] = { name, types, evolution, stats };
+        }
+
+        // ==================== FUNCIONES ====================
+        function getImageUrl(id) {
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+        }
+
+        let currentPokemonId = 1;
+
+        function displayPokemon(id) {
+            const pokemon = pokemonData[id];
+            if (!pokemon) return;
+            currentPokemonId = id;
+
+            document.getElementById('pokemonImg').src = getImageUrl(id);
+            document.getElementById('pokemonImg').alt = pokemon.name;
+            document.getElementById('pokemonSprite').setAttribute('data-pokemon', id);
+
+            const infoContainer = document.getElementById('pokemonInfo');
+            const types = pokemon.types;
+            const typeBadges = types.map(t => `<span class="type-badge type-${t}">${t}</span>`).join('');
+            const effectiveness = getEffectiveness(types);
+            const strongTags = effectiveness.strongAgainst.length > 0 ?
+                effectiveness.strongAgainst.map(t => `<span class="mini-type-tag type-${t}">${t}</span>`).join('') :
+                '<span style="color:#888;font-size:0.7em;">Ninguno</span>';
+            const weakTags = effectiveness.weakTo.length > 0 ?
+                effectiveness.weakTo.map(t => `<span class="mini-type-tag type-${t}">${t}</span>`).join('') :
+                '<span style="color:#888;font-size:0.7em;">Ninguno</span>';
+
+            infoContainer.innerHTML = `
+                <div class="pokemon-name-display">${pokemon.name}</div>
+                <div class="pokemon-id-display">N.º ${String(id).padStart(4, '0')}</div>
+                <div class="type-badges">${typeBadges}</div>
+                <div class="stats-mini">
+                    <div class="stat-item">❤️ PS ${pokemon.stats.hp}</div>
+                    <div class="stat-item">⚔️ Atq ${pokemon.stats.attack}</div>
+                    <div class="stat-item">🛡️ Def ${pokemon.stats.defense}</div>
+                    <div class="stat-item">💨 Vel ${pokemon.stats.speed}</div>
+                </div>
+                <div class="effectiveness-box" id="effBox">
+                    <div class="eff-title">📊 Efectividad en combate</div>
+                    <div class="eff-row"><span class="eff-label">💪 Fuerte vs:</span>${strongTags}</div>
+                    <div class="eff-row"><span class="eff-label">😰 Débil vs:</span>${weakTags}</div>
+                </div>
+            `;
+
+            const evoBar = document.getElementById('evolutionBar');
+            let evoHTML = '';
+            pokemon.evolution.forEach((evoId, i) => {
+                if (i > 0) evoHTML += '<span class="evo-arrow">▶</span>';
+                const evoData = pokemonData[evoId];
+                const isActive = evoId === id;
+                evoHTML +=
+                    `<span class="evo-item${isActive ? ' active' : ''}" onclick="selectPokemon(${evoId})">${evoData ? evoData.name : '???'}</span>`;
+            });
+            evoBar.innerHTML = evoHTML;
+
+            document.getElementById('pokemonSelect').value = id;
+            document.getElementById('instructionText').textContent =
+                '✨ Toca al Pokémon para ver sus datos de combate ✨';
+        }
+
+        function selectPokemon(id) {
+            displayPokemon(id);
+            document.getElementById('pokemonSelect').value = id;
+            document.getElementById('screenInner').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handleTap() {
+            const id = currentPokemonId;
+            const spriteContainer = document.getElementById('pokemonSprite');
+            spriteContainer.classList.add('tapped');
+            setTimeout(() => spriteContainer.classList.remove('tapped'), 600);
+
+            const effBox = document.getElementById('effBox');
+            if (effBox) {
+                effBox.style.background = '#fff9c4';
+                effBox.style.borderColor = '#ffd740';
+                effBox.style.boxShadow = '0 0 20px rgba(255,215,64,0.5)';
+                setTimeout(() => {
+                    effBox.style.background = 'rgba(255,255,255,0.7)';
+                    effBox.style.borderColor = '#a5d6a7';
+                    effBox.style.boxShadow = 'none';
+                }, 1500);
+                effBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            spawnParticles(spriteContainer);
+            document.getElementById('instructionText').textContent =
+                `✅ ${pokemonData[id].name} - ¡Revisa sus fortalezas y debilidades! ⚡`;
+        }
+
+        function spawnParticles(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const emojis = ['✨', '⚡', '💫', '🌟', '💥', '🔥', '💧', '🌿'];
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('span');
+                particle.className = 'particle';
+                particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                particle.style.left = centerX + (Math.random() - 0.5) * 120 + 'px';
+                particle.style.top = centerY + (Math.random() - 0.5) * 80 + 'px';
+                particle.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 3000);
+            }
+        }
+
+        function randomPokemon() {
+            const ids = Object.keys(pokemonData).map(Number);
+            const randomId = ids[Math.floor(Math.random() * ids.length)];
+            selectPokemon(randomId);
+            setTimeout(handleTap, 300);
+        }
+
+        function cycleEvolution() {
+            const pokemon = pokemonData[currentPokemonId];
+            const currentIndex = pokemon.evolution.indexOf(currentPokemonId);
+            const nextIndex = (currentIndex + 1) % pokemon.evolution.length;
+            selectPokemon(pokemon.evolution[nextIndex]);
+            setTimeout(handleTap, 300);
+        }
+
+        function init() {
+            const select = document.getElementById('pokemonSelect');
+            const sortedIds = Object.keys(pokemonData).map(Number).sort((a, b) => a - b);
+
+            sortedIds.forEach(id => {
+                const pokemon = pokemonData[id];
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = `#${String(id).padStart(4, '0')} - ${pokemon.name}`;
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    selectPokemon(parseInt(e.target.value));
+                }
+            });
+
+            document.getElementById('pokemonSprite').addEventListener('click', handleTap);
+            displayPokemon(1);
+            select.value = 1;
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
