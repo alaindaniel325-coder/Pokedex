@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokédex Nacional Completa - 1010 Pokémon ⭐</title>
+    <meta name="description" content="Pokédex completa con los 1010 Pokémon de todas las generaciones. Descubre tipos, estadísticas, evoluciones y efectividad en combate de forma interactiva.">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png">
     <style>
         :root {
             --pokedex-red: #c94040;
@@ -556,7 +558,7 @@
                 </div>
                 <div class="dex-title-area">
                     <div class="dex-title">Pokédex Nacional</div>
-                    <div class="dex-subtitle">◆ 1010 Pokémon - Todas las Generaciones ◆</div>
+                    <div class="dex-subtitle">◆ 1018 Pokémon - Tipos Reales ◆</div>
                 </div>
                 <div style="width:60px;"></div>
             </div>
@@ -575,7 +577,7 @@
             </div>
             <div class="controls-area">
                 <div class="select-wrapper">
-                    <select id="pokemonSelect"><option value="">🎮 Busca un Pokémon (1010 disponibles)...</option></select>
+                    <select id="pokemonSelect"><option value="">🎮 Busca un Pokémon (1018 disponibles)...</option></select>
                 </div>
                 <div class="dex-buttons">
                     <button class="dex-btn red" onclick="randomPokemon()" title="Pokémon aleatorio">🔀</button>
@@ -587,29 +589,21 @@
     </div>
 
     <script>
-        // ==================== GENERADOR DE DATOS PARA 1010 POKÉMON ====================
+        // ==================== TIPOS REALES DE POKÉMON (DATOS OFICIALES) ====================
         const typeEffectiveness = {
             'normal': { strongAgainst: [], weakTo: ['fighting'] },
             'fire': { strongAgainst: ['grass', 'ice', 'bug', 'steel'], weakTo: ['water', 'ground', 'rock'] },
             'water': { strongAgainst: ['fire', 'ground', 'rock'], weakTo: ['electric', 'grass'] },
             'electric': { strongAgainst: ['water', 'flying'], weakTo: ['ground'] },
-            'grass': { strongAgainst: ['water', 'ground', 'rock'], weakTo: ['fire', 'ice', 'poison', 'flying',
-            'bug'] },
-            'ice': { strongAgainst: ['grass', 'ground', 'flying', 'dragon'], weakTo: ['fire', 'fighting', 'rock',
-                    'steel'
-                ] },
-            'fighting': { strongAgainst: ['normal', 'ice', 'rock', 'dark', 'steel'], weakTo: ['flying', 'psychic',
-                    'fairy'
-                ] },
+            'grass': { strongAgainst: ['water', 'ground', 'rock'], weakTo: ['fire', 'ice', 'poison', 'flying', 'bug'] },
+            'ice': { strongAgainst: ['grass', 'ground', 'flying', 'dragon'], weakTo: ['fire', 'fighting', 'rock', 'steel'] },
+            'fighting': { strongAgainst: ['normal', 'ice', 'rock', 'dark', 'steel'], weakTo: ['flying', 'psychic', 'fairy'] },
             'poison': { strongAgainst: ['grass', 'fairy'], weakTo: ['ground', 'psychic'] },
-            'ground': { strongAgainst: ['fire', 'electric', 'poison', 'rock', 'steel'], weakTo: ['water', 'grass',
-                'ice'] },
+            'ground': { strongAgainst: ['fire', 'electric', 'poison', 'rock', 'steel'], weakTo: ['water', 'grass', 'ice'] },
             'flying': { strongAgainst: ['grass', 'fighting', 'bug'], weakTo: ['electric', 'ice', 'rock'] },
             'psychic': { strongAgainst: ['fighting', 'poison'], weakTo: ['bug', 'ghost', 'dark'] },
             'bug': { strongAgainst: ['grass', 'psychic', 'dark'], weakTo: ['fire', 'flying', 'rock'] },
-            'rock': { strongAgainst: ['fire', 'ice', 'flying', 'bug'], weakTo: ['water', 'grass', 'fighting', 'ground',
-                    'steel'
-                ] },
+            'rock': { strongAgainst: ['fire', 'ice', 'flying', 'bug'], weakTo: ['water', 'grass', 'fighting', 'ground', 'steel'] },
             'ghost': { strongAgainst: ['psychic', 'ghost'], weakTo: ['ghost', 'dark'] },
             'dragon': { strongAgainst: ['dragon'], weakTo: ['ice', 'dragon', 'fairy'] },
             'dark': { strongAgainst: ['psychic', 'ghost'], weakTo: ['fighting', 'bug', 'fairy'] },
@@ -627,390 +621,882 @@
                     eff.weakTo.forEach(t => weakTo.add(t));
                 }
             });
-            return { strongAgainst: Array.from(strongAgainst), weakTo: Array.from(weakTo) };
+            // Eliminar contradicciones
+            const resultStrong = [];
+            const resultWeak = [];
+            strongAgainst.forEach(t => { if (!weakTo.has(t)) resultStrong.push(t); });
+            weakTo.forEach(t => { if (!strongAgainst.has(t)) resultWeak.push(t); });
+            return { strongAgainst: resultStrong, weakTo: resultWeak };
         }
 
-        // Datos de todos los 1010 Pokémon (estructura optimizada)
-        const pokemonData = {};
+        // ==================== TIPOS OFICIALES DE LOS 1018 POKÉMON ====================
+        const realTypes = {
+            1: ['grass', 'poison'], 2: ['grass', 'poison'], 3: ['grass', 'poison'],
+            4: ['fire'], 5: ['fire'], 6: ['fire', 'flying'],
+            7: ['water'], 8: ['water'], 9: ['water'],
+            10: ['bug'], 11: ['bug'], 12: ['bug', 'flying'],
+            13: ['bug', 'poison'], 14: ['bug', 'poison'], 15: ['bug', 'poison'],
+            16: ['normal', 'flying'], 17: ['normal', 'flying'], 18: ['normal', 'flying'],
+            19: ['normal'], 20: ['normal'],
+            21: ['normal', 'flying'], 22: ['normal', 'flying'],
+            23: ['poison'], 24: ['poison'],
+            25: ['electric'], 26: ['electric'],
+            27: ['ground'], 28: ['ground'],
+            29: ['poison'], 30: ['poison'], 31: ['poison', 'ground'],
+            32: ['poison'], 33: ['poison'], 34: ['poison', 'ground'],
+            35: ['fairy'], 36: ['fairy'],
+            37: ['fire'], 38: ['fire'],
+            39: ['normal', 'fairy'], 40: ['normal', 'fairy'],
+            41: ['poison', 'flying'], 42: ['poison', 'flying'],
+            43: ['grass', 'poison'], 44: ['grass', 'poison'], 45: ['grass', 'poison'],
+            46: ['bug', 'grass'], 47: ['bug', 'grass'],
+            48: ['bug', 'poison'], 49: ['bug', 'poison'],
+            50: ['ground'], 51: ['ground'],
+            52: ['normal'], 53: ['normal'],
+            54: ['water'], 55: ['water'],
+            56: ['fighting'], 57: ['fighting'],
+            58: ['fire'], 59: ['fire'],
+            60: ['water'], 61: ['water'], 62: ['water', 'fighting'],
+            63: ['psychic'], 64: ['psychic'], 65: ['psychic'],
+            66: ['fighting'], 67: ['fighting'], 68: ['fighting'],
+            69: ['grass', 'poison'], 70: ['grass', 'poison'], 71: ['grass', 'poison'],
+            72: ['water', 'poison'], 73: ['water', 'poison'],
+            74: ['rock', 'ground'], 75: ['rock', 'ground'], 76: ['rock', 'ground'],
+            77: ['fire'], 78: ['fire'],
+            79: ['water', 'psychic'], 80: ['water', 'psychic'],
+            81: ['electric', 'steel'], 82: ['electric', 'steel'],
+            83: ['normal', 'flying'], 84: ['normal', 'flying'], 85: ['normal', 'flying'],
+            86: ['water'], 87: ['water', 'ice'],
+            88: ['poison'], 89: ['poison'],
+            90: ['water'], 91: ['water', 'ice'],
+            92: ['ghost', 'poison'], 93: ['ghost', 'poison'], 94: ['ghost', 'poison'],
+            95: ['rock', 'ground'], 96: ['psychic'], 97: ['psychic'],
+            98: ['water'], 99: ['water'],
+            100: ['electric'], 101: ['electric'],
+            102: ['grass', 'psychic'], 103: ['grass', 'psychic'],
+            104: ['ground'], 105: ['ground'],
+            106: ['fighting'], 107: ['fighting'],
+            108: ['normal'], 109: ['poison'], 110: ['poison'],
+            111: ['ground', 'rock'], 112: ['ground', 'rock'],
+            113: ['normal'], 114: ['grass'], 115: ['normal'],
+            116: ['water'], 117: ['water'],
+            118: ['water'], 119: ['water'],
+            120: ['water'], 121: ['water', 'psychic'],
+            122: ['psychic', 'fairy'], 123: ['bug', 'flying'],
+            124: ['ice', 'psychic'], 125: ['electric'], 126: ['fire'],
+            127: ['bug'], 128: ['normal'],
+            129: ['water'], 130: ['water', 'flying'],
+            131: ['water', 'ice'], 132: ['normal'],
+            133: ['normal'], 134: ['water'], 135: ['electric'], 136: ['fire'],
+            137: ['normal'], 138: ['rock', 'water'], 139: ['rock', 'water'],
+            140: ['rock', 'water'], 141: ['rock', 'water'],
+            142: ['rock', 'flying'], 143: ['normal'],
+            144: ['ice', 'flying'], 145: ['electric', 'flying'], 146: ['fire', 'flying'],
+            147: ['dragon'], 148: ['dragon'], 149: ['dragon', 'flying'],
+            150: ['psychic'], 151: ['psychic'],
+            // Gen 2
+            152: ['grass'], 153: ['grass'], 154: ['grass'],
+            155: ['fire'], 156: ['fire'], 157: ['fire'],
+            158: ['water'], 159: ['water'], 160: ['water'],
+            161: ['normal'], 162: ['normal'],
+            163: ['normal', 'flying'], 164: ['normal', 'flying'],
+            165: ['bug', 'flying'], 166: ['bug', 'flying'],
+            167: ['bug', 'poison'], 168: ['bug', 'poison'],
+            169: ['poison', 'flying'],
+            170: ['water', 'electric'], 171: ['water', 'electric'],
+            172: ['electric'], 173: ['fairy'], 174: ['normal', 'fairy'],
+            175: ['fairy'], 176: ['fairy', 'flying'],
+            177: ['psychic', 'flying'], 178: ['psychic', 'flying'],
+            179: ['electric'], 180: ['electric'], 181: ['electric'],
+            182: ['grass'], 183: ['water', 'fairy'], 184: ['water', 'fairy'],
+            185: ['rock'], 186: ['water'],
+            187: ['grass', 'flying'], 188: ['grass', 'flying'], 189: ['grass', 'flying'],
+            190: ['normal'], 191: ['grass'], 192: ['grass'],
+            193: ['bug', 'flying'], 194: ['water', 'ground'], 195: ['water', 'ground'],
+            196: ['psychic'], 197: ['dark'],
+            198: ['dark', 'flying'], 199: ['water', 'psychic'],
+            200: ['ghost'], 201: ['psychic'],
+            202: ['psychic'], 203: ['normal', 'psychic'],
+            204: ['bug'], 205: ['bug', 'steel'],
+            206: ['normal'], 207: ['ground', 'flying'],
+            208: ['steel', 'ground'], 209: ['fairy'], 210: ['fairy'],
+            211: ['water', 'poison'], 212: ['bug', 'steel'],
+            213: ['bug', 'rock'], 214: ['bug', 'fighting'],
+            215: ['dark', 'ice'], 216: ['normal'], 217: ['normal'],
+            218: ['fire'], 219: ['fire', 'rock'],
+            220: ['ice', 'ground'], 221: ['ice', 'ground'],
+            222: ['water', 'rock'], 223: ['water'], 224: ['water'],
+            225: ['ice', 'flying'], 226: ['water', 'flying'],
+            227: ['steel', 'flying'], 228: ['dark', 'fire'], 229: ['dark', 'fire'],
+            230: ['water', 'dragon'], 231: ['ground'], 232: ['ground'],
+            233: ['normal'], 234: ['normal'], 235: ['normal'],
+            236: ['fighting'], 237: ['fighting'],
+            238: ['ice', 'psychic'], 239: ['electric'], 240: ['fire'],
+            241: ['normal'], 242: ['normal'],
+            243: ['electric'], 244: ['fire'], 245: ['water'],
+            246: ['rock', 'ground'], 247: ['rock', 'ground'], 248: ['rock', 'dark'],
+            249: ['psychic', 'flying'], 250: ['fire', 'flying'],
+            251: ['psychic', 'grass'],
+            // Gen 3
+            252: ['grass'], 253: ['grass'], 254: ['grass'],
+            255: ['fire'], 256: ['fire', 'fighting'], 257: ['fire', 'fighting'],
+            258: ['water'], 259: ['water', 'ground'], 260: ['water', 'ground'],
+            261: ['dark'], 262: ['dark'],
+            263: ['normal'], 264: ['normal'],
+            265: ['bug'], 266: ['bug'], 267: ['bug', 'flying'],
+            268: ['bug'], 269: ['bug', 'poison'],
+            270: ['water', 'grass'], 271: ['water', 'grass'], 272: ['water', 'grass'],
+            273: ['grass'], 274: ['grass', 'dark'], 275: ['grass', 'dark'],
+            276: ['normal', 'flying'], 277: ['normal', 'flying'],
+            278: ['water', 'flying'], 279: ['water', 'flying'],
+            280: ['psychic', 'fairy'], 281: ['psychic', 'fairy'], 282: ['psychic', 'fairy'],
+            283: ['bug', 'water'], 284: ['bug', 'flying'],
+            285: ['grass'], 286: ['grass', 'fighting'],
+            287: ['normal'], 288: ['normal'], 289: ['normal'],
+            290: ['bug', 'ground'], 291: ['bug', 'flying'], 292: ['bug', 'ghost'],
+            293: ['normal'], 294: ['normal'], 295: ['normal'],
+            296: ['fighting'], 297: ['fighting'],
+            298: ['normal', 'fairy'], 299: ['rock'],
+            300: ['normal'], 301: ['normal'],
+            302: ['dark', 'ghost'], 303: ['steel', 'fairy'],
+            304: ['steel', 'rock'], 305: ['steel', 'rock'], 306: ['steel', 'rock'],
+            307: ['fighting', 'psychic'], 308: ['fighting', 'psychic'],
+            309: ['electric'], 310: ['electric'],
+            311: ['electric'], 312: ['electric'],
+            313: ['bug'], 314: ['bug'],
+            315: ['grass', 'poison'], 316: ['poison'], 317: ['poison'],
+            318: ['water', 'dark'], 319: ['water', 'dark'],
+            320: ['water'], 321: ['water'],
+            322: ['fire', 'ground'], 323: ['fire', 'ground'],
+            324: ['fire'], 325: ['psychic'], 326: ['psychic'],
+            327: ['normal'], 328: ['ground'], 329: ['ground', 'dragon'], 330: ['ground', 'dragon'],
+            331: ['grass'], 332: ['grass', 'dark'],
+            333: ['normal', 'flying'], 334: ['dragon', 'flying'],
+            335: ['normal'], 336: ['poison'],
+            337: ['rock', 'psychic'], 338: ['rock', 'psychic'],
+            339: ['water', 'ground'], 340: ['water', 'ground'],
+            341: ['water'], 342: ['water', 'dark'],
+            343: ['ground', 'psychic'], 344: ['ground', 'psychic'],
+            345: ['rock', 'grass'], 346: ['rock', 'grass'],
+            347: ['rock', 'bug'], 348: ['rock', 'bug'],
+            349: ['water'], 350: ['water'],
+            351: ['normal'], 352: ['normal'],
+            353: ['ghost'], 354: ['ghost'],
+            355: ['ghost'], 356: ['ghost'],
+            357: ['grass', 'flying'], 358: ['psychic'],
+            359: ['dark'], 360: ['psychic'],
+            361: ['ice'], 362: ['ice'],
+            363: ['ice', 'water'], 364: ['ice', 'water'], 365: ['ice', 'water'],
+            366: ['water'], 367: ['water'], 368: ['water'],
+            369: ['water', 'rock'], 370: ['water'],
+            371: ['dragon'], 372: ['dragon'], 373: ['dragon', 'flying'],
+            374: ['steel', 'psychic'], 375: ['steel', 'psychic'], 376: ['steel', 'psychic'],
+            377: ['rock'], 378: ['ice'], 379: ['steel'],
+            380: ['dragon', 'psychic'], 381: ['dragon', 'psychic'],
+            382: ['water'], 383: ['ground'], 384: ['dragon', 'flying'],
+            385: ['steel', 'psychic'], 386: ['psychic'],
+            // Gen 4
+            387: ['grass'], 388: ['grass'], 389: ['grass', 'ground'],
+            390: ['fire'], 391: ['fire', 'fighting'], 392: ['fire', 'fighting'],
+            393: ['water'], 394: ['water'], 395: ['water', 'steel'],
+            396: ['normal', 'flying'], 397: ['normal', 'flying'], 398: ['normal', 'flying'],
+            399: ['normal'], 400: ['normal', 'water'],
+            401: ['bug'], 402: ['bug'],
+            403: ['electric'], 404: ['electric'], 405: ['electric'],
+            406: ['grass', 'poison'], 407: ['grass', 'poison'],
+            408: ['rock'], 409: ['rock'],
+            410: ['rock', 'steel'], 411: ['rock', 'steel'],
+            412: ['bug'], 413: ['bug', 'grass'], 414: ['bug', 'flying'],
+            415: ['bug', 'flying'], 416: ['bug', 'flying'],
+            417: ['electric'], 418: ['water'], 419: ['water'],
+            420: ['grass'], 421: ['grass'],
+            422: ['water'], 423: ['water', 'ground'],
+            424: ['normal'], 425: ['ghost', 'flying'], 426: ['ghost', 'flying'],
+            427: ['normal'], 428: ['normal'],
+            429: ['ghost'], 430: ['dark', 'flying'],
+            431: ['normal'], 432: ['normal'],
+            433: ['psychic'], 434: ['poison', 'dark'], 435: ['poison', 'dark'],
+            436: ['steel', 'psychic'], 437: ['steel', 'psychic'],
+            438: ['rock'], 439: ['psychic', 'fairy'],
+            440: ['normal'], 441: ['normal', 'flying'],
+            442: ['ghost', 'dark'], 443: ['dragon', 'ground'], 444: ['dragon', 'ground'], 445: ['dragon', 'ground'],
+            446: ['normal'], 447: ['fighting'], 448: ['fighting', 'steel'],
+            449: ['ground'], 450: ['ground'],
+            451: ['poison', 'bug'], 452: ['poison', 'dark'],
+            453: ['poison', 'fighting'], 454: ['poison', 'fighting'],
+            455: ['grass'], 456: ['water'], 457: ['water'],
+            458: ['water', 'flying'], 459: ['grass', 'ice'], 460: ['grass', 'ice'],
+            461: ['dark', 'ice'], 462: ['electric', 'steel'],
+            463: ['normal'], 464: ['ground', 'rock'],
+            465: ['grass'], 466: ['electric'], 467: ['fire'],
+            468: ['fairy', 'flying'], 469: ['bug', 'flying'],
+            470: ['grass'], 471: ['ice'],
+            472: ['ground', 'flying'], 473: ['ice', 'ground'],
+            474: ['normal'], 475: ['psychic', 'fighting'],
+            476: ['rock', 'steel'], 477: ['ghost'],
+            478: ['ice', 'ghost'], 479: ['electric', 'ghost'],
+            480: ['psychic'], 481: ['psychic'], 482: ['psychic'],
+            483: ['steel', 'dragon'], 484: ['water', 'dragon'],
+            485: ['fire', 'steel'], 486: ['normal'],
+            487: ['ghost', 'dragon'], 488: ['psychic'],
+            489: ['water'], 490: ['water'],
+            491: ['dark'], 492: ['grass'], 493: ['normal'],
+            // Gen 5
+            494: ['psychic', 'fire'], 495: ['grass'], 496: ['grass'], 497: ['grass'],
+            498: ['fire'], 499: ['fire', 'fighting'], 500: ['fire', 'fighting'],
+            501: ['water'], 502: ['water'], 503: ['water'],
+            504: ['normal'], 505: ['normal'],
+            506: ['normal'], 507: ['normal'], 508: ['normal'],
+            509: ['dark'], 510: ['dark'],
+            511: ['grass'], 512: ['grass'],
+            513: ['fire'], 514: ['fire'],
+            515: ['water'], 516: ['water'],
+            517: ['psychic'], 518: ['psychic'],
+            519: ['normal', 'flying'], 520: ['normal', 'flying'], 521: ['normal', 'flying'],
+            522: ['electric'], 523: ['electric'],
+            524: ['rock'], 525: ['rock'], 526: ['rock'],
+            527: ['psychic', 'flying'], 528: ['psychic', 'flying'],
+            529: ['ground'], 530: ['ground', 'steel'],
+            531: ['normal'], 532: ['fighting'], 533: ['fighting'], 534: ['fighting'],
+            535: ['water'], 536: ['water', 'ground'], 537: ['water', 'ground'],
+            538: ['fighting'], 539: ['fighting'],
+            540: ['bug', 'grass'], 541: ['bug', 'grass'], 542: ['bug', 'grass'],
+            543: ['bug', 'poison'], 544: ['bug', 'poison'], 545: ['bug', 'poison'],
+            546: ['grass', 'fairy'], 547: ['grass', 'fairy'],
+            548: ['grass'], 549: ['grass'],
+            550: ['water'], 551: ['ground', 'dark'], 552: ['ground', 'dark'], 553: ['ground', 'dark'],
+            554: ['fire'], 555: ['fire'],
+            556: ['grass'], 557: ['bug', 'rock'], 558: ['bug', 'rock'],
+            559: ['dark', 'fighting'], 560: ['dark', 'fighting'],
+            561: ['psychic', 'flying'], 562: ['ghost'], 563: ['ghost'],
+            564: ['water', 'rock'], 565: ['water', 'rock'],
+            566: ['rock', 'flying'], 567: ['rock', 'flying'],
+            568: ['poison'], 569: ['poison'],
+            570: ['dark'], 571: ['dark'],
+            572: ['normal'], 573: ['normal'],
+            574: ['psychic'], 575: ['psychic'], 576: ['psychic'],
+            577: ['psychic'], 578: ['psychic'], 579: ['psychic'],
+            580: ['water', 'flying'], 581: ['water', 'flying'],
+            582: ['ice'], 583: ['ice'], 584: ['ice'],
+            585: ['normal', 'grass'], 586: ['normal', 'grass'],
+            587: ['electric', 'flying'], 588: ['bug'], 589: ['bug', 'steel'],
+            590: ['grass', 'poison'], 591: ['grass', 'poison'],
+            592: ['water', 'ghost'], 593: ['water', 'ghost'],
+            594: ['water'], 595: ['bug', 'electric'], 596: ['bug', 'electric'],
+            597: ['grass', 'steel'], 598: ['grass', 'steel'],
+            599: ['steel'], 600: ['steel'], 601: ['steel'],
+            602: ['electric'], 603: ['electric'], 604: ['electric'],
+            605: ['psychic'], 606: ['psychic'],
+            607: ['ghost', 'fire'], 608: ['ghost', 'fire'], 609: ['ghost', 'fire'],
+            610: ['dragon'], 611: ['dragon'], 612: ['dragon'],
+            613: ['ice'], 614: ['ice'],
+            615: ['ice'], 616: ['bug'], 617: ['bug'],
+            618: ['ground', 'electric'], 619: ['fighting'], 620: ['fighting'],
+            621: ['dragon'], 622: ['ground', 'ghost'], 623: ['ground', 'ghost'],
+            624: ['dark', 'steel'], 625: ['dark', 'steel'],
+            626: ['normal'], 627: ['normal', 'flying'], 628: ['normal', 'flying'],
+            629: ['dark', 'flying'], 630: ['dark', 'flying'],
+            631: ['fire'], 632: ['bug', 'steel'],
+            633: ['dark', 'dragon'], 634: ['dark', 'dragon'], 635: ['dark', 'dragon'],
+            636: ['bug', 'fire'], 637: ['bug', 'fire'],
+            638: ['steel', 'fighting'], 639: ['rock', 'fighting'], 640: ['grass', 'fighting'],
+            641: ['flying'], 642: ['electric', 'flying'], 643: ['dragon', 'fire'], 644: ['dragon', 'electric'],
+            645: ['ground', 'flying'], 646: ['dragon', 'ice'],
+            647: ['water', 'fighting'], 648: ['normal', 'psychic'], 649: ['bug', 'steel'],
+            // Gen 6
+            650: ['grass'], 651: ['grass'], 652: ['grass', 'fighting'],
+            653: ['fire'], 654: ['fire'], 655: ['fire', 'psychic'],
+            656: ['water'], 657: ['water'], 658: ['water', 'dark'],
+            659: ['normal'], 660: ['normal', 'ground'],
+            661: ['normal', 'flying'], 662: ['fire', 'flying'], 663: ['fire', 'flying'],
+            664: ['bug'], 665: ['bug'], 666: ['bug', 'flying'],
+            667: ['fire', 'normal'], 668: ['fire', 'normal'],
+            669: ['fairy'], 670: ['fairy'], 671: ['fairy'],
+            672: ['grass'], 673: ['grass'],
+            674: ['fighting'], 675: ['fighting', 'dark'],
+            676: ['normal'], 677: ['psychic'], 678: ['psychic'],
+            679: ['steel', 'ghost'], 680: ['steel', 'ghost'], 681: ['steel', 'ghost'],
+            682: ['fairy'], 683: ['fairy'],
+            684: ['fairy'], 685: ['fairy'],
+            686: ['dark', 'psychic'], 687: ['dark', 'psychic'],
+            688: ['rock', 'water'], 689: ['rock', 'water'],
+            690: ['poison', 'water'], 691: ['poison', 'dragon'],
+            692: ['water'], 693: ['water'],
+            694: ['electric', 'normal'], 695: ['electric', 'normal'],
+            696: ['rock', 'dragon'], 697: ['rock', 'dragon'],
+            698: ['rock', 'ice'], 699: ['rock', 'ice'],
+            700: ['fairy'], 701: ['fighting', 'flying'],
+            702: ['electric', 'fairy'], 703: ['rock', 'fairy'],
+            704: ['dragon'], 705: ['dragon'], 706: ['dragon'],
+            707: ['steel', 'fairy'], 708: ['ghost', 'grass'], 709: ['ghost', 'grass'],
+            710: ['ghost', 'grass'], 711: ['ghost', 'grass'],
+            712: ['ice'], 713: ['ice'],
+            714: ['flying', 'dragon'], 715: ['flying', 'dragon'],
+            716: ['fairy'], 717: ['dark', 'flying'], 718: ['dragon', 'ground'],
+            719: ['rock', 'fairy'], 720: ['psychic', 'ghost'], 721: ['fire', 'water'],
+            // Gen 7
+            722: ['grass', 'flying'], 723: ['grass', 'flying'], 724: ['grass', 'ghost'],
+            725: ['fire'], 726: ['fire'], 727: ['fire', 'dark'],
+            728: ['water'], 729: ['water'], 730: ['water', 'fairy'],
+            731: ['normal', 'flying'], 732: ['normal', 'flying'], 733: ['normal', 'flying'],
+            734: ['normal'], 735: ['normal'],
+            736: ['bug'], 737: ['bug', 'electric'], 738: ['bug', 'electric'],
+            739: ['fighting'], 740: ['fighting', 'ice'],
+            741: ['fire', 'flying'],
+            742: ['bug', 'fairy'], 743: ['bug', 'fairy'],
+            744: ['rock'], 745: ['rock'],
+            746: ['water'], 747: ['poison', 'water'], 748: ['poison', 'water'],
+            749: ['ground'], 750: ['ground'],
+            751: ['water', 'bug'], 752: ['water', 'bug'],
+            753: ['grass'], 754: ['grass'],
+            755: ['grass', 'fairy'], 756: ['grass', 'fairy'],
+            757: ['poison', 'fire'], 758: ['poison', 'fire'],
+            759: ['normal', 'fighting'], 760: ['normal', 'fighting'],
+            761: ['grass'], 762: ['grass'], 763: ['grass'],
+            764: ['fairy'], 765: ['normal', 'psychic'], 766: ['fighting'],
+            767: ['bug', 'water'], 768: ['bug', 'water'],
+            769: ['ghost', 'ground'], 770: ['ghost', 'ground'],
+            771: ['water'], 772: ['normal'], 773: ['normal'],
+            774: ['rock', 'flying'], 775: ['normal'],
+            776: ['fire', 'dragon'], 777: ['electric', 'steel'],
+            778: ['ghost', 'fairy'], 779: ['water', 'psychic'],
+            780: ['normal', 'dragon'], 781: ['ghost', 'grass'],
+            782: ['dragon'], 783: ['dragon', 'fighting'], 784: ['dragon', 'fighting'],
+            785: ['electric', 'fairy'], 786: ['psychic', 'fairy'], 787: ['grass', 'fairy'], 788: ['water', 'fairy'],
+            789: ['psychic'], 790: ['psychic'],
+            791: ['psychic', 'steel'], 792: ['psychic', 'ghost'],
+            793: ['rock', 'poison'], 794: ['bug', 'fighting'], 795: ['bug', 'fighting'],
+            796: ['electric'], 797: ['steel', 'flying'], 798: ['grass', 'steel'], 799: ['dark', 'dragon'],
+            800: ['psychic'], 801: ['steel', 'fairy'], 802: ['fighting', 'ghost'],
+            803: ['poison'], 804: ['poison', 'dragon'], 805: ['rock', 'steel'], 806: ['fire', 'ghost'],
+            807: ['electric'], 808: ['steel'], 809: ['steel'],
+            // Gen 8
+            810: ['grass'], 811: ['grass'], 812: ['grass'],
+            813: ['fire'], 814: ['fire'], 815: ['fire'],
+            816: ['water'], 817: ['water'], 818: ['water'],
+            819: ['normal'], 820: ['normal'],
+            821: ['flying'], 822: ['flying'], 823: ['flying', 'steel'],
+            824: ['bug'], 825: ['bug', 'psychic'], 826: ['bug', 'psychic'],
+            827: ['dark'], 828: ['dark'],
+            829: ['grass'], 830: ['grass'],
+            831: ['normal'], 832: ['normal'],
+            833: ['water'], 834: ['water', 'rock'],
+            835: ['electric'], 836: ['electric'],
+            837: ['rock'], 838: ['rock', 'fire'], 839: ['rock', 'fire'],
+            840: ['grass', 'dragon'], 841: ['grass', 'dragon'], 842: ['grass', 'dragon'],
+            843: ['ground'], 844: ['ground'],
+            845: ['flying', 'water'], 846: ['water'], 847: ['water'],
+            848: ['electric', 'poison'], 849: ['electric', 'poison'],
+            850: ['fire', 'bug'], 851: ['fire', 'bug'],
+            852: ['fighting'], 853: ['fighting'],
+            854: ['ghost'], 855: ['ghost'],
+            856: ['psychic'], 857: ['psychic'], 858: ['psychic', 'fairy'],
+            859: ['dark', 'fairy'], 860: ['dark', 'fairy'], 861: ['dark', 'fairy'],
+            862: ['dark', 'normal'], 863: ['steel'],
+            864: ['ghost'], 865: ['fighting'], 866: ['ice', 'psychic'],
+            867: ['ground', 'ghost'], 868: ['fairy'], 869: ['fairy'],
+            870: ['fighting'], 871: ['electric'],
+            872: ['ice', 'bug'], 873: ['ice', 'bug'],
+            874: ['rock'], 875: ['ice'],
+            876: ['psychic', 'normal'], 877: ['electric', 'dark'],
+            878: ['steel'], 879: ['steel'],
+            880: ['electric', 'dragon'], 881: ['electric', 'ice'],
+            882: ['water', 'dragon'], 883: ['water', 'ice'],
+            884: ['steel', 'dragon'], 885: ['dragon', 'ghost'], 886: ['dragon', 'ghost'], 887: ['dragon', 'ghost'],
+            888: ['fairy'], 889: ['fighting'],
+            890: ['poison', 'dragon'], 891: ['fighting'], 892: ['fighting', 'dark'],
+            893: ['dark', 'grass'], 894: ['electric'], 895: ['dragon'],
+            896: ['ice'], 897: ['ice'], 898: ['psychic', 'grass'],
+            // Gen 9
+            899: ['grass'], 900: ['grass'], 901: ['grass', 'dark'],
+            902: ['fire'], 903: ['fire'], 904: ['fire', 'ghost'],
+            905: ['water'], 906: ['water'], 907: ['water', 'fighting'],
+            908: ['normal'], 909: ['normal'],
+            910: ['bug'], 911: ['bug'],
+            912: ['bug'], 913: ['bug', 'dark'],
+            914: ['electric', 'fighting'], 915: ['electric', 'fighting'], 916: ['electric', 'fighting'],
+            917: ['normal'], 918: ['normal'],
+            919: ['fairy'], 920: ['fairy'],
+            921: ['grass', 'normal'], 922: ['grass', 'normal'], 923: ['grass', 'normal'],
+            924: ['normal', 'flying'],
+            925: ['rock'], 926: ['rock'], 927: ['rock'],
+            928: ['fire'], 929: ['fire', 'psychic'], 930: ['fire', 'ghost'],
+            931: ['electric'], 932: ['electric'],
+            933: ['electric', 'flying'], 934: ['electric', 'flying'],
+            935: ['dark'], 936: ['dark'],
+            937: ['poison', 'normal'], 938: ['poison', 'normal'],
+            939: ['grass', 'ghost'], 940: ['grass', 'ghost'],
+            941: ['ground', 'grass'], 942: ['ground', 'grass'],
+            943: ['rock'], 944: ['grass'], 945: ['grass', 'fire'],
+            946: ['bug'], 947: ['bug', 'psychic'],
+            948: ['psychic'], 949: ['psychic'],
+            950: ['fairy', 'steel'], 951: ['fairy', 'steel'], 952: ['fairy', 'steel'],
+            953: ['water'], 954: ['water'],
+            955: ['flying', 'dark'], 956: ['water'], 957: ['water'],
+            958: ['steel', 'poison'], 959: ['steel', 'poison'],
+            960: ['dragon', 'normal'], 961: ['steel'],
+            962: ['rock', 'poison'], 963: ['rock', 'poison'],
+            964: ['ghost'], 965: ['ghost'],
+            966: ['flying', 'fighting'], 967: ['ice'], 968: ['ice'],
+            969: ['water', 'psychic'], 970: ['water'], 971: ['dragon', 'water'],
+            972: ['fighting', 'ghost'], 973: ['poison', 'ground'],
+            974: ['normal', 'psychic'], 975: ['normal'],
+            976: ['dark', 'steel'],
+            977: ['ground', 'fighting'], 978: ['fairy', 'psychic'], 979: ['grass', 'dark'],
+            980: ['ghost', 'fairy'], 981: ['bug', 'fighting'], 982: ['electric', 'ground'],
+            983: ['ground', 'steel'], 984: ['ice', 'water'], 985: ['fighting', 'electric'],
+            986: ['dark', 'flying'], 987: ['fire', 'poison'], 988: ['rock', 'electric'],
+            989: ['dragon', 'ice'], 990: ['dragon', 'ice'], 991: ['dragon', 'ice'],
+            992: ['ghost'], 993: ['steel', 'ghost'],
+            994: ['dark', 'grass'], 995: ['dark', 'ice'], 996: ['dark', 'ground'], 997: ['dark', 'fire'],
+            998: ['dragon', 'dark'], 999: ['fairy', 'fighting'],
+            1000: ['fighting', 'dragon'], 1001: ['electric', 'dragon'],
+            1002: ['water', 'dragon'], 1003: ['grass', 'psychic'],
+            1004: ['grass', 'dragon'], 1005: ['grass', 'ghost'], 1006: ['grass', 'ghost'],
+            1007: ['poison', 'fighting'], 1008: ['poison', 'psychic'], 1009: ['poison', 'fairy'],
+            1010: ['grass'], 1011: ['steel', 'dragon'], 1012: ['grass', 'dragon'],
+            1013: ['fire', 'dragon'], 1014: ['electric', 'dragon'],
+            1015: ['rock', 'psychic'], 1016: ['steel', 'psychic'],
+            1017: ['normal'], 1018: ['poison', 'ghost']
+        };
 
-        // Nombres base por generación para generación procedural
+        // Nombres oficiales
         const pokemonNames = [
-            // Gen 1 (1-151)
-            'Bulbasaur', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Charizard', 'Squirtle', 'Wartortle',
-            'Blastoise',
-            'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgey', 'Pidgeotto', 'Pidgeot',
-            'Rattata',
-            'Raticate', 'Spearow', 'Fearow', 'Ekans', 'Arbok', 'Pikachu', 'Raichu', 'Sandshrew', 'Sandslash',
-            'Nidoran♀',
+            'Bulbasaur', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Charizard', 'Squirtle', 'Wartortle', 'Blastoise',
+            'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgey', 'Pidgeotto', 'Pidgeot', 'Rattata',
+            'Raticate', 'Spearow', 'Fearow', 'Ekans', 'Arbok', 'Pikachu', 'Raichu', 'Sandshrew', 'Sandslash', 'Nidoran♀',
             'Nidorina', 'Nidoqueen', 'Nidoran♂', 'Nidorino', 'Nidoking', 'Clefairy', 'Clefable', 'Vulpix', 'Ninetales',
-            'Jigglypuff', 'Wigglytuff', 'Zubat', 'Golbat', 'Oddish', 'Gloom', 'Vileplume', 'Paras', 'Parasect',
-            'Venonat',
-            'Venomoth', 'Diglett', 'Dugtrio', 'Meowth', 'Persian', 'Psyduck', 'Golduck', 'Mankey', 'Primeape',
-            'Growlithe',
-            'Arcanine', 'Poliwag', 'Poliwhirl', 'Poliwrath', 'Abra', 'Kadabra', 'Alakazam', 'Machop', 'Machoke',
-            'Machamp',
-            'Bellsprout', 'Weepinbell', 'Victreebel', 'Tentacool', 'Tentacruel', 'Geodude', 'Graveler', 'Golem',
-            'Ponyta',
-            'Rapidash', 'Slowpoke', 'Slowbro', 'Magnemite', 'Magneton', "Farfetch'd", 'Doduo', 'Dodrio', 'Seel',
-            'Dewgong',
-            'Grimer', 'Muk', 'Shellder', 'Cloyster', 'Gastly', 'Haunter', 'Gengar', 'Onix', 'Drowzee', 'Hypno',
-            'Krabby',
+            'Jigglypuff', 'Wigglytuff', 'Zubat', 'Golbat', 'Oddish', 'Gloom', 'Vileplume', 'Paras', 'Parasect', 'Venonat',
+            'Venomoth', 'Diglett', 'Dugtrio', 'Meowth', 'Persian', 'Psyduck', 'Golduck', 'Mankey', 'Primeape', 'Growlithe',
+            'Arcanine', 'Poliwag', 'Poliwhirl', 'Poliwrath', 'Abra', 'Kadabra', 'Alakazam', 'Machop', 'Machoke', 'Machamp',
+            'Bellsprout', 'Weepinbell', 'Victreebel', 'Tentacool', 'Tentacruel', 'Geodude', 'Graveler', 'Golem', 'Ponyta',
+            'Rapidash', 'Slowpoke', 'Slowbro', 'Magnemite', 'Magneton', "Farfetch'd", 'Doduo', 'Dodrio', 'Seel', 'Dewgong',
+            'Grimer', 'Muk', 'Shellder', 'Cloyster', 'Gastly', 'Haunter', 'Gengar', 'Onix', 'Drowzee', 'Hypno', 'Krabby',
             'Kingler', 'Voltorb', 'Electrode', 'Exeggcute', 'Exeggutor', 'Cubone', 'Marowak', 'Hitmonlee', 'Hitmonchan',
-            'Lickitung', 'Koffing', 'Weezing', 'Rhyhorn', 'Rhydon', 'Chansey', 'Tangela', 'Kangaskhan', 'Horsea',
-            'Seadra',
+            'Lickitung', 'Koffing', 'Weezing', 'Rhyhorn', 'Rhydon', 'Chansey', 'Tangela', 'Kangaskhan', 'Horsea', 'Seadra',
             'Goldeen', 'Seaking', 'Staryu', 'Starmie', 'Mr. Mime', 'Scyther', 'Jynx', 'Electabuzz', 'Magmar', 'Pinsir',
             'Tauros', 'Magikarp', 'Gyarados', 'Lapras', 'Ditto', 'Eevee', 'Vaporeon', 'Jolteon', 'Flareon', 'Porygon',
-            'Omanyte', 'Omastar', 'Kabuto', 'Kabutops', 'Aerodactyl', 'Snorlax', 'Articuno', 'Zapdos', 'Moltres',
-            'Dratini',
+            'Omanyte', 'Omastar', 'Kabuto', 'Kabutops', 'Aerodactyl', 'Snorlax', 'Articuno', 'Zapdos', 'Moltres', 'Dratini',
             'Dragonair', 'Dragonite', 'Mewtwo', 'Mew',
-            // Gen 2 (152-251)
-            'Chikorita', 'Bayleef', 'Meganium', 'Cyndaquil', 'Quilava', 'Typhlosion', 'Totodile', 'Croconaw',
-            'Feraligatr',
+            'Chikorita', 'Bayleef', 'Meganium', 'Cyndaquil', 'Quilava', 'Typhlosion', 'Totodile', 'Croconaw', 'Feraligatr',
             'Sentret', 'Furret', 'Hoothoot', 'Noctowl', 'Ledyba', 'Ledian', 'Spinarak', 'Ariados', 'Crobat', 'Chinchou',
-            'Lanturn', 'Pichu', 'Cleffa', 'Igglybuff', 'Togepi', 'Togetic', 'Natu', 'Xatu', 'Mareep', 'Flaaffy',
-            'Ampharos',
-            'Bellossom', 'Marill', 'Azumarill', 'Sudowoodo', 'Politoed', 'Hoppip', 'Skiploom', 'Jumpluff', 'Aipom',
-            'Sunkern',
-            'Sunflora', 'Yanma', 'Wooper', 'Quagsire', 'Espeon', 'Umbreon', 'Murkrow', 'Slowking', 'Misdreavus',
-            'Unown',
+            'Lanturn', 'Pichu', 'Cleffa', 'Igglybuff', 'Togepi', 'Togetic', 'Natu', 'Xatu', 'Mareep', 'Flaaffy', 'Ampharos',
+            'Bellossom', 'Marill', 'Azumarill', 'Sudowoodo', 'Politoed', 'Hoppip', 'Skiploom', 'Jumpluff', 'Aipom', 'Sunkern',
+            'Sunflora', 'Yanma', 'Wooper', 'Quagsire', 'Espeon', 'Umbreon', 'Murkrow', 'Slowking', 'Misdreavus', 'Unown',
             'Wobbuffet', 'Girafarig', 'Pineco', 'Forretress', 'Dunsparce', 'Gligar', 'Steelix', 'Snubbull', 'Granbull',
-            'Qwilfish', 'Scizor', 'Shuckle', 'Heracross', 'Sneasel', 'Teddiursa', 'Ursaring', 'Slugma', 'Magcargo',
-            'Swinub',
+            'Qwilfish', 'Scizor', 'Shuckle', 'Heracross', 'Sneasel', 'Teddiursa', 'Ursaring', 'Slugma', 'Magcargo', 'Swinub',
             'Piloswine', 'Corsola', 'Remoraid', 'Octillery', 'Delibird', 'Mantine', 'Skarmory', 'Houndour', 'Houndoom',
-            'Kingdra', 'Phanpy', 'Donphan', 'Porygon2', 'Stantler', 'Smeargle', 'Tyrogue', 'Hitmontop', 'Smoochum',
-            'Elekid',
-            'Magby', 'Miltank', 'Blissey', 'Raikou', 'Entei', 'Suicune', 'Larvitar', 'Pupitar', 'Tyranitar', 'Lugia',
-            'Ho-Oh', 'Celebi',
-            // Gen 3 (252-386)
+            'Kingdra', 'Phanpy', 'Donphan', 'Porygon2', 'Stantler', 'Smeargle', 'Tyrogue', 'Hitmontop', 'Smoochum', 'Elekid',
+            'Magby', 'Miltank', 'Blissey', 'Raikou', 'Entei', 'Suicune', 'Larvitar', 'Pupitar', 'Tyranitar', 'Lugia', 'Ho-Oh', 'Celebi',
             'Treecko', 'Grovyle', 'Sceptile', 'Torchic', 'Combusken', 'Blaziken', 'Mudkip', 'Marshtomp', 'Swampert',
             'Poochyena', 'Mightyena', 'Zigzagoon', 'Linoone', 'Wurmple', 'Silcoon', 'Beautifly', 'Cascoon', 'Dustox',
             'Lotad', 'Lombre', 'Ludicolo', 'Seedot', 'Nuzleaf', 'Shiftry', 'Taillow', 'Swellow', 'Wingull', 'Pelipper',
-            'Ralts', 'Kirlia', 'Gardevoir', 'Surskit', 'Masquerain', 'Shroomish', 'Breloom', 'Slakoth', 'Vigoroth',
-            'Slaking', 'Nincada', 'Ninjask', 'Shedinja', 'Whismur', 'Loudred', 'Exploud', 'Makuhita', 'Hariyama',
-            'Azurill',
-            'Nosepass', 'Skitty', 'Delcatty', 'Sableye', 'Mawile', 'Aron', 'Lairon', 'Aggron', 'Meditite', 'Medicham',
-            'Electrike', 'Manectric', 'Plusle', 'Minun', 'Volbeat', 'Illumise', 'Roselia', 'Gulpin', 'Swalot',
-            'Carvanha',
-            'Sharpedo', 'Wailmer', 'Wailord', 'Numel', 'Camerupt', 'Torkoal', 'Spoink', 'Grumpig', 'Spinda', 'Trapinch',
-            'Vibrava', 'Flygon', 'Cacnea', 'Cacturne', 'Swablu', 'Altaria', 'Zangoose', 'Seviper', 'Lunatone',
-            'Solrock',
-            'Barboach', 'Whiscash', 'Corphish', 'Crawdaunt', 'Baltoy', 'Claydol', 'Lileep', 'Cradily', 'Anorith',
-            'Armaldo',
-            'Feebas', 'Milotic', 'Castform', 'Kecleon', 'Shuppet', 'Banette', 'Duskull', 'Dusclops', 'Tropius',
-            'Chimecho',
-            'Absol', 'Wynaut', 'Snorunt', 'Glalie', 'Spheal', 'Sealeo', 'Walrein', 'Clamperl', 'Huntail', 'Gorebyss',
-            'Relicanth', 'Luvdisc', 'Bagon', 'Shelgon', 'Salamence', 'Beldum', 'Metang', 'Metagross', 'Regirock',
-            'Regice',
-            'Registeel', 'Latias', 'Latios', 'Kyogre', 'Groudon', 'Rayquaza', 'Jirachi', 'Deoxys',
-            // Gen 4 (387-493)
+            'Ralts', 'Kirlia', 'Gardevoir', 'Surskit', 'Masquerain', 'Shroomish', 'Breloom', 'Slakoth', 'Vigoroth', 'Slaking',
+            'Nincada', 'Ninjask', 'Shedinja', 'Whismur', 'Loudred', 'Exploud', 'Makuhita', 'Hariyama', 'Azurill', 'Nosepass',
+            'Skitty', 'Delcatty', 'Sableye', 'Mawile', 'Aron', 'Lairon', 'Aggron', 'Meditite', 'Medicham', 'Electrike',
+            'Manectric', 'Plusle', 'Minun', 'Volbeat', 'Illumise', 'Roselia', 'Gulpin', 'Swalot', 'Carvanha', 'Sharpedo',
+            'Wailmer', 'Wailord', 'Numel', 'Camerupt', 'Torkoal', 'Spoink', 'Grumpig', 'Spinda', 'Trapinch', 'Vibrava',
+            'Flygon', 'Cacnea', 'Cacturne', 'Swablu', 'Altaria', 'Zangoose', 'Seviper', 'Lunatone', 'Solrock', 'Barboach',
+            'Whiscash', 'Corphish', 'Crawdaunt', 'Baltoy', 'Claydol', 'Lileep', 'Cradily', 'Anorith', 'Armaldo', 'Feebas',
+            'Milotic', 'Castform', 'Kecleon', 'Shuppet', 'Banette', 'Duskull', 'Dusclops', 'Tropius', 'Chimecho', 'Absol',
+            'Wynaut', 'Snorunt', 'Glalie', 'Spheal', 'Sealeo', 'Walrein', 'Clamperl', 'Huntail', 'Gorebyss', 'Relicanth',
+            'Luvdisc', 'Bagon', 'Shelgon', 'Salamence', 'Beldum', 'Metang', 'Metagross', 'Regirock', 'Regice', 'Registeel',
+            'Latias', 'Latios', 'Kyogre', 'Groudon', 'Rayquaza', 'Jirachi', 'Deoxys',
             'Turtwig', 'Grotle', 'Torterra', 'Chimchar', 'Monferno', 'Infernape', 'Piplup', 'Prinplup', 'Empoleon',
-            'Starly',
-            'Staravia', 'Staraptor', 'Bidoof', 'Bibarel', 'Kricketot', 'Kricketune', 'Shinx', 'Luxio', 'Luxray',
-            'Budew',
-            'Roserade', 'Cranidos', 'Rampardos', 'Shieldon', 'Bastiodon', 'Burmy', 'Wormadam', 'Mothim', 'Combee',
+            'Starly', 'Staravia', 'Staraptor', 'Bidoof', 'Bibarel', 'Kricketot', 'Kricketune', 'Shinx', 'Luxio', 'Luxray',
+            'Budew', 'Roserade', 'Cranidos', 'Rampardos', 'Shieldon', 'Bastiodon', 'Burmy', 'Wormadam', 'Mothim', 'Combee',
             'Vespiquen', 'Pachirisu', 'Buizel', 'Floatzel', 'Cherubi', 'Cherrim', 'Shellos', 'Gastrodon', 'Ambipom',
             'Drifloon', 'Drifblim', 'Buneary', 'Lopunny', 'Mismagius', 'Honchkrow', 'Glameow', 'Purugly', 'Chingling',
-            'Stunky', 'Skuntank', 'Bronzor', 'Bronzong', 'Bonsly', 'Mime Jr.', 'Happiny', 'Chatot', 'Spiritomb',
-            'Gible',
-            'Gabite', 'Garchomp', 'Munchlax', 'Riolu', 'Lucario', 'Hippopotas', 'Hippowdon', 'Skorupi', 'Drapion',
-            'Croagunk',
+            'Stunky', 'Skuntank', 'Bronzor', 'Bronzong', 'Bonsly', 'Mime Jr.', 'Happiny', 'Chatot', 'Spiritomb', 'Gible',
+            'Gabite', 'Garchomp', 'Munchlax', 'Riolu', 'Lucario', 'Hippopotas', 'Hippowdon', 'Skorupi', 'Drapion', 'Croagunk',
             'Toxicroak', 'Carnivine', 'Finneon', 'Lumineon', 'Mantyke', 'Snover', 'Abomasnow', 'Weavile', 'Magnezone',
-            'Lickilicky', 'Rhyperior', 'Tangrowth', 'Electivire', 'Magmortar', 'Togekiss', 'Yanmega', 'Leafeon',
-            'Glaceon',
-            'Gliscor', 'Mamoswine', 'Porygon-Z', 'Gallade', 'Probopass', 'Dusknoir', 'Froslass', 'Rotom', 'Uxie',
-            'Mesprit',
-            'Azelf', 'Dialga', 'Palkia', 'Heatran', 'Regigigas', 'Giratina', 'Cresselia', 'Phione', 'Manaphy',
-            'Darkrai',
+            'Lickilicky', 'Rhyperior', 'Tangrowth', 'Electivire', 'Magmortar', 'Togekiss', 'Yanmega', 'Leafeon', 'Glaceon',
+            'Gliscor', 'Mamoswine', 'Porygon-Z', 'Gallade', 'Probopass', 'Dusknoir', 'Froslass', 'Rotom', 'Uxie', 'Mesprit',
+            'Azelf', 'Dialga', 'Palkia', 'Heatran', 'Regigigas', 'Giratina', 'Cresselia', 'Phione', 'Manaphy', 'Darkrai',
             'Shaymin', 'Arceus',
-            // Gen 5 (494-649)
             'Victini', 'Snivy', 'Servine', 'Serperior', 'Tepig', 'Pignite', 'Emboar', 'Oshawott', 'Dewott', 'Samurott',
-            'Patrat', 'Watchog', 'Lillipup', 'Herdier', 'Stoutland', 'Purrloin', 'Liepard', 'Pansage', 'Simisage',
-            'Pansear',
-            'Simisear', 'Panpour', 'Simipour', 'Munna', 'Musharna', 'Pidove', 'Tranquill', 'Unfezant', 'Blitzle',
-            'Zebstrika', 'Roggenrola', 'Boldore', 'Gigalith', 'Woobat', 'Swoobat', 'Drilbur', 'Excadrill', 'Audino',
-            'Timburr', 'Gurdurr', 'Conkeldurr', 'Tympole', 'Palpitoad', 'Seismitoad', 'Throh', 'Sawk', 'Sewaddle',
-            'Swadloon', 'Leavanny', 'Venipede', 'Whirlipede', 'Scolipede', 'Cottonee', 'Whimsicott', 'Petilil',
-            'Lilligant',
-            'Basculin', 'Sandile', 'Krokorok', 'Krookodile', 'Darumaka', 'Darmanitan', 'Maractus', 'Dwebble',
-            'Crustle',
-            'Scraggy', 'Scrafty', 'Sigilyph', 'Yamask', 'Cofagrigus', 'Tirtouga', 'Carracosta', 'Archen', 'Archeops',
-            'Trubbish', 'Garbodor', 'Zorua', 'Zoroark', 'Minccino', 'Cinccino', 'Gothita', 'Gothorita', 'Gothitelle',
-            'Solosis', 'Duosion', 'Reuniclus', 'Ducklett', 'Swanna', 'Vanillite', 'Vanillish', 'Vanilluxe', 'Deerling',
-            'Sawsbuck', 'Emolga', 'Karrablast', 'Escavalier', 'Foongus', 'Amoonguss', 'Frillish', 'Jellicent',
-            'Alomomola',
-            'Joltik', 'Galvantula', 'Ferroseed', 'Ferrothorn', 'Klink', 'Klang', 'Klinklang', 'Tynamo', 'Eelektrik',
-            'Eelektross', 'Elgyem', 'Beheeyem', 'Litwick', 'Lampent', 'Chandelure', 'Axew', 'Fraxure', 'Haxorus',
-            'Cubchoo',
-            'Beartic', 'Cryogonal', 'Shelmet', 'Accelgor', 'Stunfisk', 'Mienfoo', 'Mienshao', 'Druddigon', 'Golett',
-            'Golurk', 'Pawniard', 'Bisharp', 'Bouffalant', 'Rufflet', 'Braviary', 'Vullaby', 'Mandibuzz', 'Heatmor',
-            'Durant', 'Deino', 'Zweilous', 'Hydreigon', 'Larvesta', 'Volcarona', 'Cobalion', 'Terrakion', 'Virizion',
-            'Tornadus', 'Thundurus', 'Reshiram', 'Zekrom', 'Landorus', 'Kyurem', 'Keldeo', 'Meloetta', 'Genesect',
-            // Gen 6 (650-721)
+            'Patrat', 'Watchog', 'Lillipup', 'Herdier', 'Stoutland', 'Purrloin', 'Liepard', 'Pansage', 'Simisage', 'Pansear',
+            'Simisear', 'Panpour', 'Simipour', 'Munna', 'Musharna', 'Pidove', 'Tranquill', 'Unfezant', 'Blitzle', 'Zebstrika',
+            'Roggenrola', 'Boldore', 'Gigalith', 'Woobat', 'Swoobat', 'Drilbur', 'Excadrill', 'Audino', 'Timburr', 'Gurdurr',
+            'Conkeldurr', 'Tympole', 'Palpitoad', 'Seismitoad', 'Throh', 'Sawk', 'Sewaddle', 'Swadloon', 'Leavanny',
+            'Venipede', 'Whirlipede', 'Scolipede', 'Cottonee', 'Whimsicott', 'Petilil', 'Lilligant', 'Basculin', 'Sandile',
+            'Krokorok', 'Krookodile', 'Darumaka', 'Darmanitan', 'Maractus', 'Dwebble', 'Crustle', 'Scraggy', 'Scrafty',
+            'Sigilyph', 'Yamask', 'Cofagrigus', 'Tirtouga', 'Carracosta', 'Archen', 'Archeops', 'Trubbish', 'Garbodor',
+            'Zorua', 'Zoroark', 'Minccino', 'Cinccino', 'Gothita', 'Gothorita', 'Gothitelle', 'Solosis', 'Duosion',
+            'Reuniclus', 'Ducklett', 'Swanna', 'Vanillite', 'Vanillish', 'Vanilluxe', 'Deerling', 'Sawsbuck', 'Emolga',
+            'Karrablast', 'Escavalier', 'Foongus', 'Amoonguss', 'Frillish', 'Jellicent', 'Alomomola', 'Joltik', 'Galvantula',
+            'Ferroseed', 'Ferrothorn', 'Klink', 'Klang', 'Klinklang', 'Tynamo', 'Eelektrik', 'Eelektross', 'Elgyem',
+            'Beheeyem', 'Litwick', 'Lampent', 'Chandelure', 'Axew', 'Fraxure', 'Haxorus', 'Cubchoo', 'Beartic', 'Cryogonal',
+            'Shelmet', 'Accelgor', 'Stunfisk', 'Mienfoo', 'Mienshao', 'Druddigon', 'Golett', 'Golurk', 'Pawniard', 'Bisharp',
+            'Bouffalant', 'Rufflet', 'Braviary', 'Vullaby', 'Mandibuzz', 'Heatmor', 'Durant', 'Deino', 'Zweilous',
+            'Hydreigon', 'Larvesta', 'Volcarona', 'Cobalion', 'Terrakion', 'Virizion', 'Tornadus', 'Thundurus', 'Reshiram',
+            'Zekrom', 'Landorus', 'Kyurem', 'Keldeo', 'Meloetta', 'Genesect',
             'Chespin', 'Quilladin', 'Chesnaught', 'Fennekin', 'Braixen', 'Delphox', 'Froakie', 'Frogadier', 'Greninja',
-            'Bunnelby', 'Diggersby', 'Fletchling', 'Fletchinder', 'Talonflame', 'Scatterbug', 'Spewpa', 'Vivillon',
-            'Litleo',
+            'Bunnelby', 'Diggersby', 'Fletchling', 'Fletchinder', 'Talonflame', 'Scatterbug', 'Spewpa', 'Vivillon', 'Litleo',
             'Pyroar', 'Flabébé', 'Floette', 'Florges', 'Skiddo', 'Gogoat', 'Pancham', 'Pangoro', 'Furfrou', 'Espurr',
-            'Meowstic', 'Honedge', 'Doublade', 'Aegislash', 'Spritzee', 'Aromatisse', 'Swirlix', 'Slurpuff',
-            'Inkay',
-            'Malamar', 'Binacle', 'Barbaracle', 'Skrelp', 'Dragalge', 'Clauncher', 'Clawitzer', 'Helioptile',
-            'Heliolisk',
-            'Tyrunt', 'Tyrantrum', 'Amaura', 'Aurorus', 'Sylveon', 'Hawlucha', 'Dedenne', 'Carbink', 'Goomy',
-            'Sliggoo',
-            'Goodra', 'Klefki', 'Phantump', 'Trevenant', 'Pumpkaboo', 'Gourgeist', 'Bergmite', 'Avalugg', 'Noibat',
-            'Noivern', 'Xerneas', 'Yveltal', 'Zygarde', 'Diancie', 'Hoopa', 'Volcanion',
-            // Gen 7 (722-809)
+            'Meowstic', 'Honedge', 'Doublade', 'Aegislash', 'Spritzee', 'Aromatisse', 'Swirlix', 'Slurpuff', 'Inkay',
+            'Malamar', 'Binacle', 'Barbaracle', 'Skrelp', 'Dragalge', 'Clauncher', 'Clawitzer', 'Helioptile', 'Heliolisk',
+            'Tyrunt', 'Tyrantrum', 'Amaura', 'Aurorus', 'Sylveon', 'Hawlucha', 'Dedenne', 'Carbink', 'Goomy', 'Sliggoo',
+            'Goodra', 'Klefki', 'Phantump', 'Trevenant', 'Pumpkaboo', 'Gourgeist', 'Bergmite', 'Avalugg', 'Noibat', 'Noivern',
+            'Xerneas', 'Yveltal', 'Zygarde', 'Diancie', 'Hoopa', 'Volcanion',
             'Rowlet', 'Dartrix', 'Decidueye', 'Litten', 'Torracat', 'Incineroar', 'Popplio', 'Brionne', 'Primarina',
             'Pikipek', 'Trumbeak', 'Toucannon', 'Yungoos', 'Gumshoos', 'Grubbin', 'Charjabug', 'Vikavolt', 'Crabrawler',
-            'Crabominable', 'Oricorio', 'Cutiefly', 'Ribombee', 'Rockruff', 'Lycanroc', 'Wishiwashi', 'Mareanie',
-            'Toxapex',
+            'Crabominable', 'Oricorio', 'Cutiefly', 'Ribombee', 'Rockruff', 'Lycanroc', 'Wishiwashi', 'Mareanie', 'Toxapex',
             'Mudbray', 'Mudsdale', 'Dewpider', 'Araquanid', 'Fomantis', 'Lurantis', 'Morelull', 'Shiinotic', 'Salandit',
-            'Salazzle', 'Stufful', 'Bewear', 'Bounsweet', 'Steenee', 'Tsareena', 'Comfey', 'Oranguru', 'Passimian',
-            'Wimpod', 'Golisopod', 'Sandygast', 'Palossand', 'Pyukumuku', 'Type: Null', 'Silvally', 'Minior', 'Komala',
-            'Turtonator', 'Togedemaru', 'Mimikyu', 'Bruxish', 'Drampa', 'Dhelmise', 'Jangmo-o', 'Hakamo-o', 'Kommo-o',
-            'Tapu Koko', 'Tapu Lele', 'Tapu Bulu', 'Tapu Fini', 'Cosmog', 'Cosmoem', 'Solgaleo', 'Lunala', 'Nihilego',
-            'Buzzwole', 'Pheromosa', 'Xurkitree', 'Celesteela', 'Kartana', 'Guzzlord', 'Necrozma', 'Magearna',
-            'Marshadow',
-            'Poipole', 'Naganadel', 'Stakataka', 'Blacephalon', 'Zeraora', 'Meltan', 'Melmetal',
-            // Gen 8 (810-905)
+            'Salazzle', 'Stufful', 'Bewear', 'Bounsweet', 'Steenee', 'Tsareena', 'Comfey', 'Oranguru', 'Passimian', 'Wimpod',
+            'Golisopod', 'Sandygast', 'Palossand', 'Pyukumuku', 'Type: Null', 'Silvally', 'Minior', 'Komala', 'Turtonator',
+            'Togedemaru', 'Mimikyu', 'Bruxish', 'Drampa', 'Dhelmise', 'Jangmo-o', 'Hakamo-o', 'Kommo-o', 'Tapu Koko',
+            'Tapu Lele', 'Tapu Bulu', 'Tapu Fini', 'Cosmog', 'Cosmoem', 'Solgaleo', 'Lunala', 'Nihilego', 'Buzzwole',
+            'Pheromosa', 'Xurkitree', 'Celesteela', 'Kartana', 'Guzzlord', 'Necrozma', 'Magearna', 'Marshadow', 'Poipole',
+            'Naganadel', 'Stakataka', 'Blacephalon', 'Zeraora', 'Meltan', 'Melmetal',
             'Grookey', 'Thwackey', 'Rillaboom', 'Scorbunny', 'Raboot', 'Cinderace', 'Sobble', 'Drizzile', 'Inteleon',
-            'Skwovet', 'Greedent', 'Rookidee', 'Corvisquire', 'Corviknight', 'Blipbug', 'Dottler', 'Orbeetle',
-            'Nickit',
-            'Thievul', 'Gossifleur', 'Eldegoss', 'Wooloo', 'Dubwool', 'Chewtle', 'Drednaw', 'Yamper', 'Boltund',
-            'Rolycoly',
+            'Skwovet', 'Greedent', 'Rookidee', 'Corvisquire', 'Corviknight', 'Blipbug', 'Dottler', 'Orbeetle', 'Nickit',
+            'Thievul', 'Gossifleur', 'Eldegoss', 'Wooloo', 'Dubwool', 'Chewtle', 'Drednaw', 'Yamper', 'Boltund', 'Rolycoly',
             'Carkol', 'Coalossal', 'Applin', 'Flapple', 'Appletun', 'Silicobra', 'Sandaconda', 'Cramorant', 'Arrokuda',
             'Barraskewda', 'Toxel', 'Toxtricity', 'Sizzlipede', 'Centiskorch', 'Clobbopus', 'Grapploct', 'Sinistea',
-            'Polteageist', 'Hatenna', 'Hattrem', 'Hatterene', 'Impidimp', 'Morgrem', 'Grimmsnarl', 'Obstagoon',
-            'Perrserker',
-            'Cursola', "Sirfetch'd", 'Mr. Rime', 'Runerigus', 'Milcery', 'Alcremie', 'Falinks', 'Pincurchin',
-            'Snom',
-            'Frosmoth', 'Stonjourner', 'Eiscue', 'Indeedee', 'Morpeko', 'Cufant', 'Copperajah', 'Dracozolt',
-            'Arctozolt',
-            'Dracovish', 'Arctovish', 'Duraludon', 'Dreepy', 'Drakloak', 'Dragapult', 'Zacian', 'Zamazenta',
-            'Eternatus',
+            'Polteageist', 'Hatenna', 'Hattrem', 'Hatterene', 'Impidimp', 'Morgrem', 'Grimmsnarl', 'Obstagoon', 'Perrserker',
+            'Cursola', "Sirfetch'd", 'Mr. Rime', 'Runerigus', 'Milcery', 'Alcremie', 'Falinks', 'Pincurchin', 'Snom',
+            'Frosmoth', 'Stonjourner', 'Eiscue', 'Indeedee', 'Morpeko', 'Cufant', 'Copperajah', 'Dracozolt', 'Arctozolt',
+            'Dracovish', 'Arctovish', 'Duraludon', 'Dreepy', 'Drakloak', 'Dragapult', 'Zacian', 'Zamazenta', 'Eternatus',
             'Kubfu', 'Urshifu', 'Zarude', 'Regieleki', 'Regidrago', 'Glastrier', 'Spectrier', 'Calyrex',
-            // Gen 9 (906-1010)
-            'Sprigatito', 'Floragato', 'Meowscarada', 'Fuecoco', 'Crocalor', 'Skeledirge', 'Quaxly', 'Quaxwell',
-            'Quaquaval',
-            'Lechonk', 'Oinkologne', 'Tarountula', 'Spidops', 'Nymble', 'Lokix', 'Pawmi', 'Pawmo', 'Pawmot',
-            'Tandemaus',
+            'Sprigatito', 'Floragato', 'Meowscarada', 'Fuecoco', 'Crocalor', 'Skeledirge', 'Quaxly', 'Quaxwell', 'Quaquaval',
+            'Lechonk', 'Oinkologne', 'Tarountula', 'Spidops', 'Nymble', 'Lokix', 'Pawmi', 'Pawmo', 'Pawmot', 'Tandemaus',
             'Maushold', 'Fidough', 'Dachsbun', 'Smoliv', 'Dolliv', 'Arboliva', 'Squawkabilly', 'Nacli', 'Naclstack',
-            'Garganacl', 'Charcadet', 'Armarouge', 'Ceruledge', 'Tadbulb', 'Bellibolt', 'Wattrel', 'Kilowattrel',
-            'Maschiff',
-            'Mabosstiff', 'Shroodle', 'Grafaiai', 'Bramblin', 'Brambleghast', 'Toedscool', 'Toedscruel', 'Klawf',
-            'Capsakid',
+            'Garganacl', 'Charcadet', 'Armarouge', 'Ceruledge', 'Tadbulb', 'Bellibolt', 'Wattrel', 'Kilowattrel', 'Maschiff',
+            'Mabosstiff', 'Shroodle', 'Grafaiai', 'Bramblin', 'Brambleghast', 'Toedscool', 'Toedscruel', 'Klawf', 'Capsakid',
             'Scovillain', 'Rellor', 'Rabsca', 'Flittle', 'Espathra', 'Tinkatink', 'Tinkatuff', 'Tinkaton', 'Wiglett',
             'Wugtrio', 'Bombirdier', 'Finizen', 'Palafin', 'Varoom', 'Revavroom', 'Cyclizar', 'Orthworm', 'Glimmet',
             'Glimmora', 'Greavard', 'Houndstone', 'Flamigo', 'Cetoddle', 'Cetitan', 'Veluza', 'Dondozo', 'Tatsugiri',
-            'Annihilape', 'Clodsire', 'Farigiraf', 'Dudunsparce', 'Kingambit', 'Great Tusk', 'Scream Tail',
-            'Brute Bonnet',
+            'Annihilape', 'Clodsire', 'Farigiraf', 'Dudunsparce', 'Kingambit', 'Great Tusk', 'Scream Tail', 'Brute Bonnet',
             'Flutter Mane', 'Slither Wing', 'Sandy Shocks', 'Iron Treads', 'Iron Bundle', 'Iron Hands', 'Iron Jugulis',
             'Iron Moth', 'Iron Thorns', 'Frigibax', 'Arctibax', 'Baxcalibur', 'Gimmighoul', 'Gholdengo', 'Wo-Chien',
             'Chien-Pao', 'Ting-Lu', 'Chi-Yu', 'Roaring Moon', 'Iron Valiant', 'Koraidon', 'Miraidon', 'Walking Wake',
             'Iron Leaves', 'Dipplin', 'Poltchageist', 'Sinistcha', 'Okidogi', 'Munkidori', 'Fezandipiti', 'Ogerpon',
-            'Archaludon', 'Hydrapple', 'Gouging Fire', 'Raging Bolt', 'Iron Boulder', 'Iron Crown', 'Terapagos',
-            'Pecharunt'
+            'Archaludon', 'Hydrapple', 'Gouging Fire', 'Raging Bolt', 'Iron Boulder', 'Iron Crown', 'Terapagos', 'Pecharunt'
         ];
 
-        // Generar datos para todos los 1010 Pokémon
+        // Evoluciones oficiales
+        const evolutions = {
+            1: [1, 2, 3], 2: [1, 2, 3], 3: [1, 2, 3],
+            4: [4, 5, 6], 5: [4, 5, 6], 6: [4, 5, 6],
+            7: [7, 8, 9], 8: [7, 8, 9], 9: [7, 8, 9],
+            10: [10, 11, 12], 11: [10, 11, 12], 12: [10, 11, 12],
+            13: [13, 14, 15], 14: [13, 14, 15], 15: [13, 14, 15],
+            16: [16, 17, 18], 17: [16, 17, 18], 18: [16, 17, 18],
+            19: [19, 20], 20: [19, 20],
+            21: [21, 22], 22: [21, 22],
+            23: [23, 24], 24: [23, 24],
+            25: [172, 25, 26], 26: [172, 25, 26], 172: [172, 25, 26],
+            27: [27, 28], 28: [27, 28],
+            29: [29, 30, 31], 30: [29, 30, 31], 31: [29, 30, 31],
+            32: [32, 33, 34], 33: [32, 33, 34], 34: [32, 33, 34],
+            35: [173, 35, 36], 36: [173, 35, 36], 173: [173, 35, 36],
+            37: [37, 38], 38: [37, 38],
+            39: [174, 39, 40], 40: [174, 39, 40], 174: [174, 39, 40],
+            41: [41, 42, 169], 42: [41, 42, 169], 169: [41, 42, 169],
+            43: [43, 44, 45], 44: [43, 44, 45], 45: [43, 44, 45],
+            46: [46, 47], 47: [46, 47],
+            48: [48, 49], 49: [48, 49],
+            50: [50, 51], 51: [50, 51],
+            52: [52, 53], 53: [52, 53],
+            54: [54, 55], 55: [54, 55],
+            56: [56, 57], 57: [56, 57],
+            58: [58, 59], 59: [58, 59],
+            60: [60, 61, 62], 61: [60, 61, 62], 62: [60, 61, 62],
+            63: [63, 64, 65], 64: [63, 64, 65], 65: [63, 64, 65],
+            66: [66, 67, 68], 67: [66, 67, 68], 68: [66, 67, 68],
+            69: [69, 70, 71], 70: [69, 70, 71], 71: [69, 70, 71],
+            72: [72, 73], 73: [72, 73],
+            74: [74, 75, 76], 75: [74, 75, 76], 76: [74, 75, 76],
+            77: [77, 78], 78: [77, 78],
+            79: [79, 80], 80: [79, 80],
+            81: [81, 82], 82: [81, 82],
+            84: [84, 85], 85: [84, 85],
+            86: [86, 87], 87: [86, 87],
+            88: [88, 89], 89: [88, 89],
+            90: [90, 91], 91: [90, 91],
+            92: [92, 93, 94], 93: [92, 93, 94], 94: [92, 93, 94],
+            96: [96, 97], 97: [96, 97],
+            98: [98, 99], 99: [98, 99],
+            100: [100, 101], 101: [100, 101],
+            102: [102, 103], 103: [102, 103],
+            104: [104, 105], 105: [104, 105],
+            109: [109, 110], 110: [109, 110],
+            111: [111, 112], 112: [111, 112],
+            116: [116, 117], 117: [116, 117],
+            118: [118, 119], 119: [118, 119],
+            120: [120, 121], 121: [120, 121],
+            129: [129, 130], 130: [129, 130],
+            133: [133, 134, 135, 136, 196, 197, 470, 471, 700],
+            134: [133, 134], 135: [133, 135], 136: [133, 136],
+            138: [138, 139], 139: [138, 139],
+            140: [140, 141], 141: [140, 141],
+            147: [147, 148, 149], 148: [147, 148, 149], 149: [147, 148, 149],
+            152: [152, 153, 154], 153: [152, 153, 154], 154: [152, 153, 154],
+            155: [155, 156, 157], 156: [155, 156, 157], 157: [155, 156, 157],
+            158: [158, 159, 160], 159: [158, 159, 160], 160: [158, 159, 160],
+            161: [161, 162], 162: [161, 162],
+            163: [163, 164], 164: [163, 164],
+            165: [165, 166], 166: [165, 166],
+            167: [167, 168], 168: [167, 168],
+            170: [170, 171], 171: [170, 171],
+            175: [175, 176], 176: [175, 176],
+            177: [177, 178], 178: [177, 178],
+            179: [179, 180, 181], 180: [179, 180, 181], 181: [179, 180, 181],
+            183: [298, 183, 184], 184: [298, 183, 184], 298: [298, 183, 184],
+            187: [187, 188, 189], 188: [187, 188, 189], 189: [187, 188, 189],
+            191: [191, 192], 192: [191, 192],
+            194: [194, 195], 195: [194, 195],
+            196: [133, 196], 197: [133, 197],
+            204: [204, 205], 205: [204, 205],
+            209: [209, 210], 210: [209, 210],
+            216: [216, 217], 217: [216, 217],
+            218: [218, 219], 219: [218, 219],
+            220: [220, 221], 221: [220, 221],
+            223: [223, 224], 224: [223, 224],
+            228: [228, 229], 229: [228, 229],
+            231: [231, 232], 232: [231, 232],
+            246: [246, 247, 248], 247: [246, 247, 248], 248: [246, 247, 248],
+            252: [252, 253, 254], 253: [252, 253, 254], 254: [252, 253, 254],
+            255: [255, 256, 257], 256: [255, 256, 257], 257: [255, 256, 257],
+            258: [258, 259, 260], 259: [258, 259, 260], 260: [258, 259, 260],
+            261: [261, 262], 262: [261, 262],
+            263: [263, 264], 264: [263, 264],
+            265: [265, 266, 267], 266: [265, 266, 267], 267: [265, 266, 267],
+            268: [265, 268, 269], 269: [265, 268, 269],
+            270: [270, 271, 272], 271: [270, 271, 272], 272: [270, 271, 272],
+            273: [273, 274, 275], 274: [273, 274, 275], 275: [273, 274, 275],
+            276: [276, 277], 277: [276, 277],
+            278: [278, 279], 279: [278, 279],
+            280: [280, 281, 282], 281: [280, 281, 282], 282: [280, 281, 282],
+            283: [283, 284], 284: [283, 284],
+            285: [285, 286], 286: [285, 286],
+            287: [287, 288, 289], 288: [287, 288, 289], 289: [287, 288, 289],
+            290: [290, 291], 291: [290, 291], 292: [290, 292],
+            293: [293, 294, 295], 294: [293, 294, 295], 295: [293, 294, 295],
+            296: [296, 297], 297: [296, 297],
+            300: [300, 301], 301: [300, 301],
+            304: [304, 305, 306], 305: [304, 305, 306], 306: [304, 305, 306],
+            307: [307, 308], 308: [307, 308],
+            309: [309, 310], 310: [309, 310],
+            316: [316, 317], 317: [316, 317],
+            318: [318, 319], 319: [318, 319],
+            320: [320, 321], 321: [320, 321],
+            322: [322, 323], 323: [322, 323],
+            325: [325, 326], 326: [325, 326],
+            328: [328, 329, 330], 329: [328, 329, 330], 330: [328, 329, 330],
+            331: [331, 332], 332: [331, 332],
+            333: [333, 334], 334: [333, 334],
+            339: [339, 340], 340: [339, 340],
+            341: [341, 342], 342: [341, 342],
+            343: [343, 344], 344: [343, 344],
+            345: [345, 346], 346: [345, 346],
+            347: [347, 348], 348: [347, 348],
+            349: [349, 350], 350: [349, 350],
+            353: [353, 354], 354: [353, 354],
+            355: [355, 356], 356: [355, 356],
+            361: [361, 362], 362: [361, 362],
+            363: [363, 364, 365], 364: [363, 364, 365], 365: [363, 364, 365],
+            366: [366, 367], 367: [366, 367], 368: [366, 368],
+            371: [371, 372, 373], 372: [371, 372, 373], 373: [371, 372, 373],
+            374: [374, 375, 376], 375: [374, 375, 376], 376: [374, 375, 376],
+            387: [387, 388, 389], 388: [387, 388, 389], 389: [387, 388, 389],
+            390: [390, 391, 392], 391: [390, 391, 392], 392: [390, 391, 392],
+            393: [393, 394, 395], 394: [393, 394, 395], 395: [393, 394, 395],
+            396: [396, 397, 398], 397: [396, 397, 398], 398: [396, 397, 398],
+            399: [399, 400], 400: [399, 400],
+            401: [401, 402], 402: [401, 402],
+            403: [403, 404, 405], 404: [403, 404, 405], 405: [403, 404, 405],
+            406: [406, 315, 407], 315: [406, 315, 407], 407: [406, 315, 407],
+            408: [408, 409], 409: [408, 409],
+            410: [410, 411], 411: [410, 411],
+            412: [412, 413], 413: [412, 413], 414: [412, 414],
+            415: [415, 416], 416: [415, 416],
+            418: [418, 419], 419: [418, 419],
+            420: [420, 421], 421: [420, 421],
+            422: [422, 423], 423: [422, 423],
+            425: [425, 426], 426: [425, 426],
+            427: [427, 428], 428: [427, 428],
+            431: [431, 432], 432: [431, 432],
+            434: [434, 435], 435: [434, 435],
+            436: [436, 437], 437: [436, 437],
+            443: [443, 444, 445], 444: [443, 444, 445], 445: [443, 444, 445],
+            447: [447, 448], 448: [447, 448],
+            449: [449, 450], 450: [449, 450],
+            451: [451, 452], 452: [451, 452],
+            453: [453, 454], 454: [453, 454],
+            456: [456, 457], 457: [456, 457],
+            459: [459, 460], 460: [459, 460],
+            470: [133, 470], 471: [133, 471],
+            495: [495, 496, 497], 496: [495, 496, 497], 497: [495, 496, 497],
+            498: [498, 499, 500], 499: [498, 499, 500], 500: [498, 499, 500],
+            501: [501, 502, 503], 502: [501, 502, 503], 503: [501, 502, 503],
+            504: [504, 505], 505: [504, 505],
+            506: [506, 507, 508], 507: [506, 507, 508], 508: [506, 507, 508],
+            509: [509, 510], 510: [509, 510],
+            511: [511, 512], 512: [511, 512],
+            513: [513, 514], 514: [513, 514],
+            515: [515, 516], 516: [515, 516],
+            517: [517, 518], 518: [517, 518],
+            519: [519, 520, 521], 520: [519, 520, 521], 521: [519, 520, 521],
+            522: [522, 523], 523: [522, 523],
+            524: [524, 525, 526], 525: [524, 525, 526], 526: [524, 525, 526],
+            527: [527, 528], 528: [527, 528],
+            529: [529, 530], 530: [529, 530],
+            532: [532, 533, 534], 533: [532, 533, 534], 534: [532, 533, 534],
+            535: [535, 536, 537], 536: [535, 536, 537], 537: [535, 536, 537],
+            540: [540, 541, 542], 541: [540, 541, 542], 542: [540, 541, 542],
+            543: [543, 544, 545], 544: [543, 544, 545], 545: [543, 544, 545],
+            546: [546, 547], 547: [546, 547],
+            548: [548, 549], 549: [548, 549],
+            551: [551, 552, 553], 552: [551, 552, 553], 553: [551, 552, 553],
+            554: [554, 555], 555: [554, 555],
+            557: [557, 558], 558: [557, 558],
+            559: [559, 560], 560: [559, 560],
+            562: [562, 563], 563: [562, 563],
+            564: [564, 565], 565: [564, 565],
+            566: [566, 567], 567: [566, 567],
+            568: [568, 569], 569: [568, 569],
+            570: [570, 571], 571: [570, 571],
+            572: [572, 573], 573: [572, 573],
+            574: [574, 575, 576], 575: [574, 575, 576], 576: [574, 575, 576],
+            577: [577, 578, 579], 578: [577, 578, 579], 579: [577, 578, 579],
+            580: [580, 581], 581: [580, 581],
+            582: [582, 583, 584], 583: [582, 583, 584], 584: [582, 583, 584],
+            585: [585, 586], 586: [585, 586],
+            588: [588, 589], 589: [588, 589],
+            590: [590, 591], 591: [590, 591],
+            592: [592, 593], 593: [592, 593],
+            595: [595, 596], 596: [595, 596],
+            597: [597, 598], 598: [597, 598],
+            599: [599, 600, 601], 600: [599, 600, 601], 601: [599, 600, 601],
+            602: [602, 603, 604], 603: [602, 603, 604], 604: [602, 603, 604],
+            605: [605, 606], 606: [605, 606],
+            607: [607, 608, 609], 608: [607, 608, 609], 609: [607, 608, 609],
+            610: [610, 611, 612], 611: [610, 611, 612], 612: [610, 611, 612],
+            613: [613, 614], 614: [613, 614],
+            616: [616, 617], 617: [616, 617],
+            619: [619, 620], 620: [619, 620],
+            622: [622, 623], 623: [622, 623],
+            624: [624, 625], 625: [624, 625],
+            627: [627, 628], 628: [627, 628],
+            629: [629, 630], 630: [629, 630],
+            633: [633, 634, 635], 634: [633, 634, 635], 635: [633, 634, 635],
+            636: [636, 637], 637: [636, 637],
+            650: [650, 651, 652], 651: [650, 651, 652], 652: [650, 651, 652],
+            653: [653, 654, 655], 654: [653, 654, 655], 655: [653, 654, 655],
+            656: [656, 657, 658], 657: [656, 657, 658], 658: [656, 657, 658],
+            659: [659, 660], 660: [659, 660],
+            661: [661, 662, 663], 662: [661, 662, 663], 663: [661, 662, 663],
+            664: [664, 665, 666], 665: [664, 665, 666], 666: [664, 665, 666],
+            667: [667, 668], 668: [667, 668],
+            669: [669, 670, 671], 670: [669, 670, 671], 671: [669, 670, 671],
+            672: [672, 673], 673: [672, 673],
+            674: [674, 675], 675: [674, 675],
+            677: [677, 678], 678: [677, 678],
+            679: [679, 680, 681], 680: [679, 680, 681], 681: [679, 680, 681],
+            682: [682, 683], 683: [682, 683],
+            684: [684, 685], 685: [684, 685],
+            686: [686, 687], 687: [686, 687],
+            688: [688, 689], 689: [688, 689],
+            690: [690, 691], 691: [690, 691],
+            692: [692, 693], 693: [692, 693],
+            694: [694, 695], 695: [694, 695],
+            696: [696, 697], 697: [696, 697],
+            698: [698, 699], 699: [698, 699],
+            700: [133, 700],
+            704: [704, 705, 706], 705: [704, 705, 706], 706: [704, 705, 706],
+            708: [708, 709], 709: [708, 709],
+            710: [710, 711], 711: [710, 711],
+            712: [712, 713], 713: [712, 713],
+            714: [714, 715], 715: [714, 715],
+            722: [722, 723, 724], 723: [722, 723, 724], 724: [722, 723, 724],
+            725: [725, 726, 727], 726: [725, 726, 727], 727: [725, 726, 727],
+            728: [728, 729, 730], 729: [728, 729, 730], 730: [728, 729, 730],
+            731: [731, 732, 733], 732: [731, 732, 733], 733: [731, 732, 733],
+            734: [734, 735], 735: [734, 735],
+            736: [736, 737, 738], 737: [736, 737, 738], 738: [736, 737, 738],
+            739: [739, 740], 740: [739, 740],
+            742: [742, 743], 743: [742, 743],
+            744: [744, 745], 745: [744, 745],
+            747: [747, 748], 748: [747, 748],
+            749: [749, 750], 750: [749, 750],
+            751: [751, 752], 752: [751, 752],
+            753: [753, 754], 754: [753, 754],
+            755: [755, 756], 756: [755, 756],
+            757: [757, 758], 758: [757, 758],
+            759: [759, 760], 760: [759, 760],
+            761: [761, 762, 763], 762: [761, 762, 763], 763: [761, 762, 763],
+            767: [767, 768], 768: [767, 768],
+            769: [769, 770], 770: [769, 770],
+            772: [772, 773], 773: [772, 773],
+            782: [782, 783, 784], 783: [782, 783, 784], 784: [782, 783, 784],
+            789: [789, 790], 790: [789, 790],
+            803: [803, 804], 804: [803, 804],
+            810: [810, 811, 812], 811: [810, 811, 812], 812: [810, 811, 812],
+            813: [813, 814, 815], 814: [813, 814, 815], 815: [813, 814, 815],
+            816: [816, 817, 818], 817: [816, 817, 818], 818: [816, 817, 818],
+            819: [819, 820], 820: [819, 820],
+            821: [821, 822, 823], 822: [821, 822, 823], 823: [821, 822, 823],
+            824: [824, 825, 826], 825: [824, 825, 826], 826: [824, 825, 826],
+            827: [827, 828], 828: [827, 828],
+            829: [829, 830], 830: [829, 830],
+            831: [831, 832], 832: [831, 832],
+            833: [833, 834], 834: [833, 834],
+            835: [835, 836], 836: [835, 836],
+            837: [837, 838, 839], 838: [837, 838, 839], 839: [837, 838, 839],
+            840: [840, 841], 841: [840, 841], 842: [840, 842],
+            843: [843, 844], 844: [843, 844],
+            846: [846, 847], 847: [846, 847],
+            848: [848, 849], 849: [848, 849],
+            850: [850, 851], 851: [850, 851],
+            852: [852, 853], 853: [852, 853],
+            854: [854, 855], 855: [854, 855],
+            856: [856, 857, 858], 857: [856, 857, 858], 858: [856, 857, 858],
+            859: [859, 860, 861], 860: [859, 860, 861], 861: [859, 860, 861],
+            885: [885, 886, 887], 886: [885, 886, 887], 887: [885, 886, 887],
+            891: [891, 892], 892: [891, 892],
+            899: [899, 900, 901], 900: [899, 900, 901], 901: [899, 900, 901],
+            902: [902, 903, 904], 903: [902, 903, 904], 904: [902, 903, 904],
+            905: [905, 906, 907], 906: [905, 906, 907], 907: [905, 906, 907],
+            908: [908, 909], 909: [908, 909],
+            910: [910, 911], 911: [910, 911],
+            912: [912, 913], 913: [912, 913],
+            914: [914, 915, 916], 915: [914, 915, 916], 916: [914, 915, 916],
+            917: [917, 918], 918: [917, 918],
+            919: [919, 920], 920: [919, 920],
+            921: [921, 922, 923], 922: [921, 922, 923], 923: [921, 922, 923],
+            925: [925, 926, 927], 926: [925, 926, 927], 927: [925, 926, 927],
+            928: [928, 929], 929: [928, 929], 930: [928, 930],
+            931: [931, 932], 932: [931, 932],
+            933: [933, 934], 934: [933, 934],
+            935: [935, 936], 936: [935, 936],
+            937: [937, 938], 938: [937, 938],
+            939: [939, 940], 940: [939, 940],
+            941: [941, 942], 942: [941, 942],
+            944: [944, 945], 945: [944, 945],
+            946: [946, 947], 947: [946, 947],
+            948: [948, 949], 949: [948, 949],
+            950: [950, 951, 952], 951: [950, 951, 952], 952: [950, 951, 952],
+            953: [953, 954], 954: [953, 954],
+            956: [956, 957], 957: [956, 957],
+            958: [958, 959], 959: [958, 959],
+            962: [962, 963], 963: [962, 963],
+            964: [964, 965], 965: [964, 965],
+            967: [967, 968], 968: [967, 968],
+            989: [989, 990, 991], 990: [989, 990, 991], 991: [989, 990, 991],
+            992: [992, 993], 993: [992, 993],
+            1004: [1004, 1005], 1005: [1004, 1005], 1006: [1004, 1006]
+        };
+
+        // Construir datos completos
+        const pokemonData = {};
         for (let i = 0; i < pokemonNames.length; i++) {
             const id = i + 1;
             const name = pokemonNames[i];
-            let types = ['normal'];
-            let evolution = [id];
-            let stats = { hp: 50, attack: 50, defense: 50, speed: 50 };
-
-            // Asignar tipos según el nombre (aproximación)
-            const nameLower = name.toLowerCase();
-            if (nameLower.includes('char') || nameLower.includes('fire') || nameLower.includes('flame') || nameLower
-                .includes('mag') || nameLower.includes('heat') || nameLower.includes('entei') || nameLower.includes(
-                    'ho-oh') || nameLower.includes('moltres') || nameLower.includes('torchic') || nameLower.includes(
-                    'chimchar') || nameLower.includes('tepig') || nameLower.includes('fennekin') || nameLower.includes(
-                    'litten') || nameLower.includes('scorbunny') || nameLower.includes('fuecoco')) {
-                types = ['fire'];
-            } else if (nameLower.includes('squirtle') || nameLower.includes('wartortle') || nameLower.includes(
-                    'blastoise') || nameLower.includes('water') || nameLower.includes('aqua') || nameLower.includes(
-                    'sea') || nameLower.includes('marine') || nameLower.includes('totodile') || nameLower.includes(
-                    'mudkip') || nameLower.includes('piplup') || nameLower.includes('oshawott') || nameLower.includes(
-                    'froakie') || nameLower.includes('popplio') || nameLower.includes('sobble') || nameLower.includes(
-                    'quaxly') || nameLower.includes('kyogre') || nameLower.includes('suicune') || nameLower.includes(
-                    'manaphy') || nameLower.includes('phione')) {
-                types = ['water'];
-            } else if (nameLower.includes('bulbasaur') || nameLower.includes('ivysaur') || nameLower.includes(
-                    'venusaur') || nameLower.includes('grass') || nameLower.includes('leaf') || nameLower.includes(
-                    'forest') || nameLower.includes('chikorita') || nameLower.includes('treecko') || nameLower.includes(
-                    'turtwig') || nameLower.includes('snivy') || nameLower.includes('chespin') || nameLower.includes(
-                    'rowlet') || nameLower.includes('grookey') || nameLower.includes('sprigatito') || nameLower
-                .includes('shaymin') || nameLower.includes('celebi')) {
-                types = ['grass'];
-            } else if (nameLower.includes('pikachu') || nameLower.includes('raichu') || nameLower.includes('pichu') ||
-                nameLower.includes('elect') || nameLower.includes('volt') || nameLower.includes('zap') || nameLower
-                .includes('thunder') || nameLower.includes('raikou') || nameLower.includes('zeraora')) {
-                types = ['electric'];
-            } else if (nameLower.includes('ice') || nameLower.includes('fro') || nameLower.includes('artic') ||
-                nameLower.includes('regice') || nameLower.includes('glaceon') || nameLower.includes('cryogonal')) {
-                types = ['ice'];
-            } else if (nameLower.includes('dragon') || nameLower.includes('draco') || nameLower.includes('sala') ||
-                nameLower.includes('rayquaza') || nameLower.includes('dialga') || nameLower.includes('palkia') ||
-                nameLower.includes('giratina') || nameLower.includes('reshiram') || nameLower.includes('zekrom') ||
-                nameLower.includes('kyurem')) {
-                types = ['dragon'];
-            } else if (nameLower.includes('ghost') || nameLower.includes('gast') || nameLower.includes('haunt') ||
-                nameLower.includes('gengar') || nameLower.includes('misdreavus') || nameLower.includes('dusk') ||
-                nameLower.includes('shuppet') || nameLower.includes('spiritomb') || nameLower.includes('giratina')) {
-                types = ['ghost'];
-            } else if (nameLower.includes('psychic') || nameLower.includes('psy') || nameLower.includes('mew') ||
-                nameLower.includes('alakazam') || nameLower.includes('espeon') || nameLower.includes('gardevoir') ||
-                nameLower.includes('uxie') || nameLower.includes('mesprit') || nameLower.includes('azelf')) {
-                types = ['psychic'];
-            } else if (nameLower.includes('fight') || nameLower.includes('mach') || nameLower.includes('hitmon') ||
-                nameLower.includes('lucario') || nameLower.includes('keldeo') || nameLower.includes('cobalion') ||
-                nameLower.includes('terrakion') || nameLower.includes('virizion')) {
-                types = ['fighting'];
-            } else if (nameLower.includes('dark') || nameLower.includes('umbreon') || nameLower.includes('absol') ||
-                nameLower.includes('darkrai') || nameLower.includes('zorua') || nameLower.includes('zoroark')) {
-                types = ['dark'];
-            } else if (nameLower.includes('steel') || nameLower.includes('magn') || nameLower.includes('steelix') ||
-                nameLower.includes('scizor') || nameLower.includes('metagross') || nameLower.includes('jirachi') ||
-                nameLower.includes('dialga') || nameLower.includes('registeel')) {
-                types = ['steel'];
-            } else if (nameLower.includes('fairy') || nameLower.includes('clef') || nameLower.includes('jiggly') ||
-                nameLower.includes('togepi') || nameLower.includes('sylveon') || nameLower.includes('xerneas') ||
-                nameLower.includes('diancie')) {
-                types = ['fairy'];
-            } else if (nameLower.includes('poison') || nameLower.includes('weed') || nameLower.includes('ekans') ||
-                nameLower.includes('arbok') || nameLower.includes('koffing') || nameLower.includes('weezing') ||
-                nameLower.includes('grimer') || nameLower.includes('muk')) {
-                types = ['poison'];
-            } else if (nameLower.includes('ground') || nameLower.includes('sand') || nameLower.includes('dig') ||
-                nameLower.includes('groudon') || nameLower.includes('golem') || nameLower.includes('rhydon')) {
-                types = ['ground'];
-            } else if (nameLower.includes('fly') || nameLower.includes('bird') || nameLower.includes('pidge') ||
-                nameLower.includes('zubat') || nameLower.includes('golbat') || nameLower.includes('crobat') ||
-                nameLower.includes('togekiss') || nameLower.includes('rayquaza')) {
-                types = ['flying'];
-            } else if (nameLower.includes('bug') || nameLower.includes('cater') || nameLower.includes('beedrill') ||
-                nameLower.includes('butterfree') || nameLower.includes('pinsir') || nameLower.includes('heracross') ||
-                nameLower.includes('volcarona') || nameLower.includes('genesect')) {
-                types = ['bug'];
-            } else if (nameLower.includes('rock') || nameLower.includes('onix') || nameLower.includes('geodude') ||
-                nameLower.includes('regirock') || nameLower.includes('aero') || nameLower.includes('omanyte') ||
-                nameLower.includes('kabuto')) {
-                types = ['rock'];
-            }
-
-            // Tipos secundarios
-            if (nameLower.includes('charizard') || nameLower.includes('gyarados') || nameLower.includes('aerodactyl') ||
-                nameLower.includes('dragonite') || nameLower.includes('salamence') || nameLower.includes('rayquaza') ||
-                nameLower.includes('ho-oh') || nameLower.includes('lugia') || nameLower.includes('togekiss') ||
-                nameLower.includes('noivern')) {
-                types = types[0] === 'dragon' ? ['dragon', 'flying'] : types[0] === 'fire' ? ['fire', 'flying'] : ['normal',
-                    'flying'
-                ];
-            }
-            if (nameLower.includes('gengar') || nameLower.includes('gastly') || nameLower.includes('haunter')) types =
-                ['ghost', 'poison'];
-            if (nameLower.includes('bulbasaur') || nameLower.includes('ivysaur') || nameLower.includes('venusaur')) types =
-                ['grass', 'poison'];
-            if (nameLower.includes('pidgeot') || nameLower.includes('pidgey') || nameLower.includes('pidgeotto')) types =
-                ['normal', 'flying'];
-            if (nameLower.includes('articuno')) types = ['ice', 'flying'];
-            if (nameLower.includes('zapdos')) types = ['electric', 'flying'];
-            if (nameLower.includes('moltres')) types = ['fire', 'flying'];
-            if (nameLower.includes('butterfree')) types = ['bug', 'flying'];
-            if (nameLower.includes('beedrill')) types = ['bug', 'poison'];
-            if (nameLower.includes('nidoqueen') || nameLower.includes('nidoking')) types = ['poison', 'ground'];
-
-            // Evoluciones de iniciales
-            if (id === 2) evolution = [1, 2, 3];
-            if (id === 3) evolution = [1, 2, 3];
-            if (id === 1) evolution = [1, 2, 3];
-            if (id === 5) evolution = [4, 5, 6];
-            if (id === 6) evolution = [4, 5, 6];
-            if (id === 4) evolution = [4, 5, 6];
-            if (id === 8) evolution = [7, 8, 9];
-            if (id === 9) evolution = [7, 8, 9];
-            if (id === 7) evolution = [7, 8, 9];
-            if (id === 25) evolution = [172, 25, 26];
-            if (id === 26) evolution = [172, 25, 26];
-            if (id === 172) evolution = [172, 25, 26];
-            if (id === 153) evolution = [152, 153, 154];
-            if (id === 154) evolution = [152, 153, 154];
-            if (id === 152) evolution = [152, 153, 154];
-            if (id === 156) evolution = [155, 156, 157];
-            if (id === 157) evolution = [155, 156, 157];
-            if (id === 155) evolution = [155, 156, 157];
-            if (id === 159) evolution = [158, 159, 160];
-            if (id === 160) evolution = [158, 159, 160];
-            if (id === 158) evolution = [158, 159, 160];
-            if (id === 253) evolution = [252, 253, 254];
-            if (id === 254) evolution = [252, 253, 254];
-            if (id === 252) evolution = [252, 253, 254];
-            if (id === 256) evolution = [255, 256, 257];
-            if (id === 257) evolution = [255, 256, 257];
-            if (id === 255) evolution = [255, 256, 257];
-            if (id === 259) evolution = [258, 259, 260];
-            if (id === 260) evolution = [258, 259, 260];
-            if (id === 258) evolution = [258, 259, 260];
-            if (id === 388) evolution = [387, 388, 389];
-            if (id === 389) evolution = [387, 388, 389];
-            if (id === 387) evolution = [387, 388, 389];
-            if (id === 391) evolution = [390, 391, 392];
-            if (id === 392) evolution = [390, 391, 392];
-            if (id === 390) evolution = [390, 391, 392];
-            if (id === 394) evolution = [393, 394, 395];
-            if (id === 395) evolution = [393, 394, 395];
-            if (id === 393) evolution = [393, 394, 395];
-            if (id === 496) evolution = [495, 496, 497];
-            if (id === 497) evolution = [495, 496, 497];
-            if (id === 495) evolution = [495, 496, 497];
-            if (id === 499) evolution = [498, 499, 500];
-            if (id === 500) evolution = [498, 499, 500];
-            if (id === 498) evolution = [498, 499, 500];
-            if (id === 502) evolution = [501, 502, 503];
-            if (id === 503) evolution = [501, 502, 503];
-            if (id === 501) evolution = [501, 502, 503];
-            if (id === 651) evolution = [650, 651, 652];
-            if (id === 652) evolution = [650, 651, 652];
-            if (id === 650) evolution = [650, 651, 652];
-            if (id === 654) evolution = [653, 654, 655];
-            if (id === 655) evolution = [653, 654, 655];
-            if (id === 653) evolution = [653, 654, 655];
-            if (id === 657) evolution = [656, 657, 658];
-            if (id === 658) evolution = [656, 657, 658];
-            if (id === 656) evolution = [656, 657, 658];
-            if (id === 723) evolution = [722, 723, 724];
-            if (id === 724) evolution = [722, 723, 724];
-            if (id === 722) evolution = [722, 723, 724];
-            if (id === 726) evolution = [725, 726, 727];
-            if (id === 727) evolution = [725, 726, 727];
-            if (id === 725) evolution = [725, 726, 727];
-            if (id === 729) evolution = [728, 729, 730];
-            if (id === 730) evolution = [728, 729, 730];
-            if (id === 728) evolution = [728, 729, 730];
-            if (id === 811) evolution = [810, 811, 812];
-            if (id === 812) evolution = [810, 811, 812];
-            if (id === 810) evolution = [810, 811, 812];
-            if (id === 814) evolution = [813, 814, 815];
-            if (id === 815) evolution = [813, 814, 815];
-            if (id === 813) evolution = [813, 814, 815];
-            if (id === 817) evolution = [816, 817, 818];
-            if (id === 818) evolution = [816, 817, 818];
-            if (id === 816) evolution = [816, 817, 818];
-            if (id === 907) evolution = [906, 907, 908];
-            if (id === 908) evolution = [906, 907, 908];
-            if (id === 906) evolution = [906, 907, 908];
-            if (id === 910) evolution = [909, 910, 911];
-            if (id === 911) evolution = [909, 910, 911];
-            if (id === 909) evolution = [909, 910, 911];
-            if (id === 913) evolution = [912, 913, 914];
-            if (id === 914) evolution = [912, 913, 914];
-            if (id === 912) evolution = [912, 913, 914];
-            // Eeveeluciones
-            if (id === 134 || id === 135 || id === 136 || id === 196 || id === 197 || id === 470 || id === 471 || id ===
-                700) evolution = [133, id];
-            if (id === 133) evolution = [133, 134, 135, 136, 196, 197, 470, 471, 700];
-
-            pokemonData[id] = { name, types, evolution, stats };
+            const types = realTypes[id] || ['normal'];
+            const evolution = evolutions[id] || [id];
+            pokemonData[id] = { name, types, evolution, stats: { hp: 50, attack: 50, defense: 50, speed: 50 } };
         }
 
         // ==================== FUNCIONES ====================
